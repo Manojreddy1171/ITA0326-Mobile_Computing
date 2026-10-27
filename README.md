@@ -133,7 +133,9 @@ ITA0326-Mobile_Computing/
 ├── styles.css                           # Mobile design system, phone shell & theme
 ├── app.js                               # Core business logic for all 3 modules
 ├── README.md                            # Comprehensive project documentation
-├── Mobile_Marketplace_Capstone.pptx      # Capstone slide deck presentation
-├── Frequency_Reuse_Concept_Map_Report.docx # Coursework assessment report
-└── .gitignore                           # Git ignore configuration
+├── .gitignore                           # Git ignore configuration
+└── docs/                                # Project presentations and coursework documents
+    ├── Mobile_Marketplace_Capstone.pptx      # Capstone slide deck presentation
+    ├── Frequency_Reuse_Concept_Map_Report.docx # Coursework assessment report
+    └── *.docx                           # Assessment reports and solved assignments
 ```
