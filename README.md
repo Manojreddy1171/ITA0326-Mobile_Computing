@@ -101,26 +101,28 @@ This project delivers a **Smart Mobile Wholesale Marketplace** designed to bridg
 
 ## 💻 How to Run Locally
 
-You can run this project using any local web server or open directly in your browser:
-
-### Option 1: Using Python
+### Prototype (Standalone Single-Page Web App)
+Navigate to the `project/prototype/` directory:
 ```bash
+cd project/prototype
 python -m http.server 3000
 ```
-Then navigate to: `http://localhost:3000`
+Then navigate to: `http://localhost:3000` or simply open `project/prototype/index.html` directly in your browser.
 
-### Option 2: Using Node.js / npx serve
+### WholesaleHub Full-Stack App
+Navigate to `project/wholesalehub/`:
 ```bash
-npx serve .
+cd project/wholesalehub
+# Start backend
+cd backend && npm run dev
+# In another terminal, start frontend
+cd ../frontend && npm run dev
 ```
-
-### Option 3: Direct Browser Launch
-Double-click `index.html` in your file explorer to open it in Chrome, Edge, Safari, or Firefox.
 
 ---
 
 ## 📱 Mobile Frame vs Full-Width Mode
-- Use the **Mobile Frame** toggle on the top navigation bar to experience the application exactly as it appears on an iPhone 16 Pro device.
+- Use the **Mobile Frame** toggle on the top navigation bar to experience the prototype application exactly as it appears on an iPhone 16 Pro device.
 - Switch to **Full Width** mode for presentation on projector screens or wide desktop monitors.
 - Use the **Active Role** selector (Buyer vs Seller) to view perspective-specific controls.
 
@@ -129,13 +131,30 @@ Double-click `index.html` in your file explorer to open it in Chrome, Edge, Safa
 ## 📁 Repository Structure
 ```
 ITA0326-Mobile_Computing/
-├── index.html                           # Main application single-page structure
-├── styles.css                           # Mobile design system, phone shell & theme
-├── app.js                               # Core business logic for all 3 modules
-├── README.md                            # Comprehensive project documentation
-├── .gitignore                           # Git ignore configuration
-└── docs/                                # Project presentations and coursework documents
-    ├── Mobile_Marketplace_Capstone.pptx      # Capstone slide deck presentation
-    ├── Frequency_Reuse_Concept_Map_Report.docx # Coursework assessment report
-    └── *.docx                           # Assessment reports and solved assignments
+├── assignments/                         # Course assignments & submissions
+│   ├── ITA03_Mobile_Computing_Assignment1.pdf
+│   └── MC-Assignment1.docx
+├── cos/                                 # Course Outcomes (CO) deliverables & lab work
+│   ├── CO2/                             # CO2 Assessment Tool 2 Figma designs & reports
+│   │   ├── A_ManojReddy192311171_CO2_AT2.pdf
+│   │   ├── D Karthik 192311320 CO2_AT2.docx
+│   │   └── *.png                        # CO2 Assessment Question figures & UI screens
+│   └── experiments/                     # Lab experiments (Exp 1 to Exp 30)
+│       ├── Lab Program List MC.docx     # Course lab syllabus and problem statements
+│       └── exp-*.png                    # Experiment screenshots (exp-1 to exp-30)
+├── docs/                                # Coursework reports, presentations, guides
+│   ├── Frequency_Reuse_Concept_Map_Report.docx
+│   ├── Mobile_Marketplace_Capstone.pptx
+│   ├── OMNeT++_Installation_Guide.md
+│   └── *.docx                           # Solved assessment reports
+├── project/                             # Capstone project source code
+│   ├── prototype/                       # Interactive mobile web prototype
+│   │   ├── index.html
+│   │   ├── styles.css
+│   │   └── app.js
+│   └── wholesalehub/                    # Full-stack B2B mobile marketplace
+│       ├── backend/                     # Node.js, Express, Socket.io, MySQL
+│       └── frontend/                    # React 18, Vite, TypeScript, Tailwind CSS
+├── .gitignore
+└── README.md
 ```
