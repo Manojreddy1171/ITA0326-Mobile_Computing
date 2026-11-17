@@ -133,7 +133,9 @@ cd ../frontend && npm run dev
 ITA0326-Mobile_Computing/
 ├── assignments/                         # Course assignments & submissions
 │   ├── ITA03_Mobile_Computing_Assignment1.pdf
-│   └── MC-Assignment1.docx
+│   ├── MC-Assignment1.docx
+│   ├── ITA03_Mobile_Computing_Assignment2.pdf
+│   └── MC-Assignment2.docx
 ├── cos/                                 # Course Outcomes (CO) deliverables & lab work
 │   ├── CO2/                             # CO2 Assessment Tool 2 Figma designs & reports
 │   │   ├── A_ManojReddy192311171_CO2_AT2.pdf
