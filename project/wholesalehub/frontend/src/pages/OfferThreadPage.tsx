@@ -70,7 +70,7 @@ export default function OfferThreadPage() {
         setIsCountering(false);
         refetch();
       }
-      queryClient.invalidateQueries(['offers']);
+      queryClient.invalidateQueries({ queryKey: ['offers'] });
     },
     onError: (err: any) => {
       toast.error(err.response?.data?.error || 'Action failed');

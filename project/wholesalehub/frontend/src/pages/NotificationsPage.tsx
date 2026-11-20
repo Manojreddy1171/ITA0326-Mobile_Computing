@@ -33,7 +33,7 @@ export default function NotificationsPage() {
     if (!socket) return;
     const handleNotif = () => {
       refetch();
-      queryClient.invalidateQueries(['notifications-count']);
+      queryClient.invalidateQueries({ queryKey: ['notifications-count'] });
     };
     socket.on('notification', handleNotif);
     return () => {
@@ -46,7 +46,7 @@ export default function NotificationsPage() {
     onSuccess: () => {
       toast.success('All marked as read');
       refetch();
-      queryClient.invalidateQueries(['notifications-count']);
+      queryClient.invalidateQueries({ queryKey: ['notifications-count'] });
     },
   });
 
@@ -54,7 +54,7 @@ export default function NotificationsPage() {
     if (!notif.is_read) {
       await api.patch(`/notifications/${notif.id}/read`);
       refetch();
-      queryClient.invalidateQueries(['notifications-count']);
+      queryClient.invalidateQueries({ queryKey: ['notifications-count'] });
     }
 
     // Parse notification data to navigate

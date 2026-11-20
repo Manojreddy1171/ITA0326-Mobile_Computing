@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriConnect – Smart Wholesale Price Negotiator</title>
+    <style>
+        :root {
+            --primary: #087b38;
+            --primary-dark: #05652f;
+            --primary-light: #e8f5e9;
+            --accent: #f57c00;
+            --accent-light: #fff3e0;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --card-bg: #ffffff;
+            --bg-body: #f8fafc;
+            --success: #16a34a;
+            --warning: #ca8a04;
+            --danger: #dc2626;
+            --info: #0284c7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            min-width: 260px;
+            background: linear-gradient(180deg, #087b38 0%, #05652f 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .sidebar-logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav {
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.88);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            box-shadow: inset 4px 0 0 #ffb300;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: #ffb300;
+            color: #1b5e20;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .top-navbar {
+            background: white;
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .page-title-box h1 {
+            font-size: 20px;
+            color: var(--primary-dark);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-title-box p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-accent:hover {
+            opacity: 0.9;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary-light);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .container {
+            padding: 24px 28px;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 18px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-val {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-lbl {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Two Column Layout */
+        .negotiation-workspace {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* Negotiations List Panel */
+        .panel {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-title {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .filter-tabs {
+            display: flex;
+            padding: 8px 12px;
+            gap: 6px;
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .neg-list {
+            max-height: 620px;
+            overflow-y: auto;
+        }
+
+        .neg-item {
+            padding: 16px 18px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            gap: 12px;
+        }
+
+        .neg-item:hover, .neg-item.active {
+            background: #f0fdf4;
+        }
+
+        .neg-item.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        .neg-thumb {
+            width: 54px;
+            height: 54px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .neg-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .neg-crop {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .neg-parties {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .neg-price-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .price-badge {
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .badge-status {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 12px;
+            text-transform: capitalize;
+        }
+
+        .badge-pending { background: #fef3c7; color: #b45309; }
+        .badge-counteroffer_received { background: #e0f2fe; color: #0369a1; }
+        .badge-accepted { background: #dcfce7; color: #15803d; }
+        .badge-rejected { background: #fee2e2; color: #b91c1c; }
+
+        /* Detail Panel */
+        .detail-panel {
+            min-height: 620px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .deal-header-card {
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .deal-crop-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .deal-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+
+        .deal-meta-item .label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .deal-meta-item .val {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Smart Recommendation Banner */
+        .smart-recommendation-box {
+            margin: 16px 24px;
+            padding: 16px 20px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 10px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .smart-icon {
+            font-size: 24px;
+            color: #d97706;
+        }
+
+        .smart-text h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .smart-text p {
+            font-size: 13px;
+            color: #78350f;
+            line-height: 1.4;
+        }
+
+        .btn-apply-rec {
+            margin-top: 8px;
+            background: #d97706;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Timeline / Messages */
+        .timeline-scroll {
+            flex: 1;
+            padding: 20px 24px;
+            overflow-y: auto;
+            max-height: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: #fafafa;
+        }
+
+        .timeline-bubble {
+            max-width: 82%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .bubble-buyer {
+            align-self: flex-start;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 2px;
+        }
+
+        .bubble-farmer {
+            align-self: flex-end;
+            background: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-bottom-right-radius: 2px;
+        }
+
+        .bubble-system {
+            align-self: center;
+            max-width: 90%;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            font-size: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .bubble-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .bubble-price-highlight {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin: 4px 0;
+        }
+
+        /* Action Footer */
+        .negotiation-actions-footer {
+            padding: 18px 24px;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .counter-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .counter-input-group input {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            width: 140px;
+            font-weight: 600;
+        }
+
+        .counter-input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .accepted-deal-banner {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #dcfce7;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background: white;
+            width: 90%;
+            max-width: 520px;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            padding: 18px 24px;
+            background: var(--primary-dark);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .calc-preview-card {
+            background: var(--primary-light);
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--primary-dark);
+        }
+
+        @media (max-width: 960px) {
+            .sidebar {
+                display: none;
+            }
+            .main-wrapper {
+                margin-left: 0;
+            }
+            .negotiation-workspace {
+                grid-template-columns: 1fr;
+            }
+            .deal-meta-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <span style="font-size: 26px;">🌾</span>
+            <div class="sidebar-logo-text">AgriConnect</div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="farmer-dashboard.html" class="nav-item">
+                <span>▦</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="marketplace.html" class="nav-item">
+                <span>🛒</span>
+                <span>Marketplace</span>
+            </a>
+            <a href="wholesale-negotiations.html" class="nav-item active">
+                <span>🤝</span>
+                <span>Smart Negotiator</span>
+                <span class="nav-badge" id="navNegBadge">Active</span>
+            </a>
+            <a href="image-upload-studio.html" class="nav-item">
+                <span>📸</span>
+                <span>Camera & Images</span>
+            </a>
+            <a href="group-buying.html" class="nav-item">
+                <span>👥</span>
+                <span>Smart Group Buying</span>
+            </a>
+            <a href="equipment-rental.html" class="nav-item">
+                <span>🚜</span>
+                <span>Equipment Rental</span>
+            </a>
+            <a href="orders.html" class="nav-item">
+                <span>📦</span>
+                <span>My Orders</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+        <!-- TOP NAVBAR -->
+        <header class="top-navbar">
+            <div class="page-title-box">
+                <h1>🤝 Smart Wholesale Price Negotiator</h1>
+                <p>Digital bilateral price bargaining with transparent volume-discount intelligence</p>
+            </div>
+            <div class="top-actions">
+                <div class="user-chip" id="userChip">
+                    <span id="roleIcon">👨‍🌾</span>
+                    <span id="userDisplayName">Demo Farmer (Tamil Nadu)</span>
+                </div>
+                <button class="btn-primary" onclick="openNewNegotiationModal()">
+                    <span>➕</span>
+                    <span>New Wholesale Offer</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- METRIC STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#e8f5e9; color:#2e7d32;">🤝</div>
+                    <div>
+                        <div class="stat-val" id="statActiveCount">1</div>
+                        <div class="stat-lbl">Active Negotiations</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#dcfce7; color:#16a34a;">✅</div>
+                    <div>
+                        <div class="stat-val" id="statAcceptedCount">1</div>
+                        <div class="stat-lbl">Deals Agreed</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#fef3c7; color:#d97706;">📦</div>
+                    <div>
+                        <div class="stat-val" id="statTotalVolume">100 kg</div>
+                        <div class="stat-lbl">Total Volume Bargained</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#e0f2fe; color:#0284c7;">💰</div>
+                    <div>
+                        <div class="stat-val">₹47 / kg</div>
+                        <div class="stat-lbl">Latest Agreed Price</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WORKSPACE: LIST & DETAIL -->
+            <div class="negotiation-workspace">
+                <!-- LEFT: LIST -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-title">Negotiation Threads</span>
+                        <span id="threadCountBadge" style="font-size:12px; font-weight:700; color:var(--text-secondary);">1 Threads</span>
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="tab-btn active" onclick="filterList('all')">All</button>
+                        <button class="tab-btn" onclick="filterList('pending')">Pending</button>
+                        <button class="tab-btn" onclick="filterList('counteroffer_received')">Countered</button>
+                        <button class="tab-btn" onclick="filterList('accepted')">Accepted</button>
+                    </div>
+                    <div class="neg-list" id="negotiationListContainer">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- RIGHT: DETAIL -->
+                <div class="panel detail-panel" id="detailPanel">
+                    <!-- HEADER METADATA -->
+                    <div class="deal-header-card" id="dealHeaderCard">
+                        <img src="/uploads/demo_tomatoes.png" class="deal-crop-img" id="detailCropImg" alt="Crop">
+                        <div class="deal-meta-grid">
+                            <div class="deal-meta-item">
+                                <div class="label">Product</div>
+                                <div class="val" id="detailCropName">Tomatoes</div>
+                            </div>
+                            <div class="deal-meta-item">
+                                <div class="label">Bulk Quantity</div>
+                                <div class="val" id="detailQuantity">100 kg</div>
+                            </div>
+                            <div class="deal-meta-item">
+                                <div class="label">Asking Price</div>
+                                <div class="val" id="detailAskingPrice">₹50 / kg</div>
+                            </div>
+                            <div class="deal-meta-item">
+                                <div class="label">Current Offer</div>
+                                <div class="val" style="color:var(--primary);" id="detailCurrentPrice">₹47 / kg</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SMART RECOMMENDATION ADVICE BOX -->
+                    <div class="smart-recommendation-box" id="smartAdviceBox">
+                        <div class="smart-icon">💡</div>
+                        <div class="smart-text">
+                            <h4>Smart Price Negotiator Advice</h4>
+                            <p id="smartAdviceText">
+                                Asking price is ₹50/kg. For 100 kg bulk volume, market reference is ₹48/kg. A balanced win-win counteroffer is ₹46/kg.
+                            </p>
+                            <button class="btn-apply-rec" id="btnApplyRec" onclick="applyRecommendation()">
+                                ⚡ Fill Recommended Counter (₹46/kg)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TIMELINE OF OFFERS -->
+                    <div class="timeline-scroll" id="timelineScroll">
+                        <!-- Dynamically filled with bubbles -->
+                    </div>
+
+                    <!-- ACTIONS FOOTER -->
+                    <div class="negotiation-actions-footer" id="actionsFooter">
+                        <!-- Filled dynamically based on status -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- NEW NEGOTIATION MODAL -->
+    <div class="modal" id="newNegModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>🤝 Start Wholesale Price Negotiation</h3>
+                <button onclick="closeModal()" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Select Agricultural Product</label>
+                    <select id="modalCropSelect" class="form-control" onchange="updateModalCalc()">
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Requested Bulk Quantity (kg)</label>
+                    <input type="number" id="modalQuantity" class="form-control" value="100" min="10" oninput="updateModalCalc()">
+                </div>
+                <div class="form-group">
+                    <label>Your Offered Price per Kilogram (₹)</label>
+                    <input type="number" id="modalOfferPrice" class="form-control" value="42" step="0.5" oninput="updateModalCalc()">
+                </div>
+                <div class="form-group">
+                    <label>Notes / Quality Terms (Optional)</label>
+                    <input type="text" id="modalNotes" class="form-control" placeholder="e.g. Immediate delivery required, cash on delivery">
+                </div>
+                <div class="calc-preview-card" id="modalCalcCard">
+                    <strong>Deal Summary:</strong><br>
+                    Asking Price: ₹50/kg | Total Value: ₹4,200<br>
+                    <span style="font-weight:600; color:#d97706;">💡 System Tip: Wholesale orders ≥100 kg qualify for up to 10% volume discount.</span>
+                </div>
+                <button class="btn-primary" style="justify-content:center; padding:12px;" onclick="submitNewNegotiation()">
+                    Submit Wholesale Offer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Active User resolution
+        let currentUser = null;
+        try {
+            const stored = sessionStorage.getItem("user");
+            if (stored) currentUser = JSON.parse(stored);
+        } catch (e) {}
+
+        if (!currentUser) {
+            currentUser = {
+                id: 27, // Demo Farmer
+                first_name: "Demo",
+                last_name: "Farmer",
+                role: "farmer"
+            };
+        }
+
+        document.getElementById("userDisplayName").textContent =
+            `${currentUser.first_name || 'Demo'} ${currentUser.last_name || 'User'} (${currentUser.role || 'farmer'})`;
+        document.getElementById("roleIcon").textContent = currentUser.role === 'buyer' ? '🛒' : '👨‍🌾';
+
+        let allNegotiations = [];
+        let activeNegotiationId = null;
+        let activeCropList = [];
+        let currentRecPrice = 46;
+
+        // Fetch Negotiations on Load
+        async function loadNegotiations() {
+            try {
+                const res = await fetch(`/api/negotiations?user_id=${currentUser.id}&role=${currentUser.role}`);
+                const data = await res.json();
+                if (data.success) {
+                    allNegotiations = data.negotiations;
+                    renderNegotiationList(allNegotiations);
+                    updateStats();
+                    if (allNegotiations.length > 0) {
+                        loadNegotiationDetail(allNegotiations[0].id);
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to load negotiations:", err);
+            }
+        }
+
+        function updateStats() {
+            const active = allNegotiations.filter(n => n.status === 'pending' || n.status === 'counteroffer_received').length;
+            const accepted = allNegotiations.filter(n => n.status === 'accepted').length;
+            const vol = allNegotiations.reduce((sum, n) => sum + parseFloat(n.quantity), 0);
+
+            document.getElementById("statActiveCount").textContent = active;
+            document.getElementById("statAcceptedCount").textContent = accepted;
+            document.getElementById("statTotalVolume").textContent = `${vol} kg`;
+            document.getElementById("threadCountBadge").textContent = `${allNegotiations.length} Threads`;
+        }
+
+        function renderNegotiationList(items) {
+            const container = document.getElementById("negotiationListContainer");
+            if (items.length === 0) {
+                container.innerHTML = `<div style="padding:32px; text-align:center; color:#94a3b8;">No negotiations found.</div>`;
+                return;
+            }
+
+            container.innerHTML = items.map(n => `
+                <div class="neg-item ${n.id === activeNegotiationId ? 'active' : ''}" onclick="loadNegotiationDetail(${n.id})">
+                    <img src="${n.crop_image || '/uploads/demo_tomatoes.png'}" class="neg-thumb" alt="${n.crop_name}">
+                    <div class="neg-info">
+                        <div class="neg-crop">${n.crop_name} (${n.quantity} kg)</div>
+                        <div class="neg-parties">
+                            ${currentUser.role === 'farmer' ? 'Buyer: ' + n.buyer_first_name : 'Farmer: ' + n.farmer_first_name}
+                        </div>
+                        <div class="neg-price-row">
+                            <span class="price-badge">₹${n.current_counter_price || n.offered_price}/kg</span>
+                            <span class="badge-status badge-${n.status}">${n.status.replace('_', ' ')}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterList(status) {
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            event.target.classList.add("active");
+
+            if (status === 'all') {
+                renderNegotiationList(allNegotiations);
+            } else {
+                renderNegotiationList(allNegotiations.filter(n => n.status === status));
+            }
+        }
+
+        async function loadNegotiationDetail(id) {
+            activeNegotiationId = id;
+            renderNegotiationList(allNegotiations);
+
+            try {
+                const res = await fetch(`/api/negotiations/${id}`);
+                const data = await res.json();
+                if (!data.success) return;
+
+                const neg = data.negotiation;
+                const timeline = data.timeline;
+                const rec = data.recommendation;
+
+                document.getElementById("detailCropImg").src = neg.crop_image || '/uploads/demo_tomatoes.png';
+                document.getElementById("detailCropName").textContent = `${neg.crop_name} (${neg.specific_name || ''})`;
+                document.getElementById("detailQuantity").textContent = `${neg.quantity} kg`;
+                document.getElementById("detailAskingPrice").textContent = `₹${neg.asking_price} / kg`;
+                document.getElementById("detailCurrentPrice").textContent = `₹${neg.current_counter_price || neg.offered_price} / kg`;
+
+                // Smart advice
+                if (rec) {
+                    currentRecPrice = rec.suggestedPrice;
+                    document.getElementById("smartAdviceText").textContent = rec.reasoning;
+                    document.getElementById("btnApplyRec").textContent = `⚡ Fill Counteroffer (₹${rec.suggestedPrice}/kg)`;
+                }
+
+                // Render Timeline
+                const timelineEl = document.getElementById("timelineScroll");
+                timelineEl.innerHTML = timeline.map(m => {
+                    let bubbleClass = "bubble-system";
+                    let senderName = "AgriConnect Smart Advisor";
+
+                    if (m.sender_role === 'buyer') {
+                        bubbleClass = "bubble-buyer";
+                        senderName = m.first_name ? `${m.first_name} (Buyer)` : 'Buyer';
+                    } else if (m.sender_role === 'farmer') {
+                        bubbleClass = "bubble-farmer";
+                        senderName = m.first_name ? `${m.first_name} (Farmer)` : 'Farmer';
+                    }
+
+                    return `
+                        <div class="timeline-bubble ${bubbleClass}">
+                            <div class="bubble-header">
+                                <span>${senderName}</span>
+                                <span>${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                            </div>
+                            ${m.price ? `<div class="bubble-price-highlight">Proposed: ₹${m.price} / kg</div>` : ''}
+                            <div>${m.message}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                timelineEl.scrollTop = timelineEl.scrollHeight;
+
+                // Render Actions Footer
+                const footerEl = document.getElementById("actionsFooter");
+                if (neg.status === 'accepted') {
+                    footerEl.innerHTML = `
+                        <div class="accepted-deal-banner">
+                            <div>
+                                <strong style="color:#15803d; font-size:15px;">🎉 Deal Agreed at ₹${neg.final_agreed_price}/kg!</strong>
+                                <div style="font-size:12px; color:#166534;">Total agreed valuation: ₹${(parseFloat(neg.final_agreed_price) * parseFloat(neg.quantity)).toLocaleString('en-IN')}</div>
+                            </div>
+                            <button class="btn-primary" onclick="convertDealToOrder(${neg.id})">
+                                📦 Confirm & Create Order
+                            </button>
+                        </div>
+                    `;
+                } else if (neg.status === 'rejected') {
+                    footerEl.innerHTML = `
+                        <div style="color:#b91c1c; font-weight:700; padding:10px 0;">This negotiation has been closed / rejected.</div>
+                    `;
+                } else {
+                    footerEl.innerHTML = `
+                        <div class="counter-input-group">
+                            <label style="font-size:13px; font-weight:600;">Counter (₹/kg):</label>
+                            <input type="number" id="counterPriceInput" step="0.5" value="${currentRecPrice}">
+                            <input type="text" id="counterNoteInput" placeholder="Add terms or note..." style="flex:1;">
+                            <button class="btn-accent" onclick="sendCounteroffer(${neg.id})">Send Counter</button>
+                        </div>
+                        <button class="btn-primary" style="background:#16a34a;" onclick="acceptDeal(${neg.id})">
+                            ✅ Accept Deal
+                        </button>
+                        <button class="btn-outline" style="color:#dc2626;" onclick="rejectDeal(${neg.id})">
+                            Reject
+                        </button>
+                    `;
+                }
+
+            } catch (err) {
+                console.error("Error loading detail:", err);
+            }
+        }
+
+        function applyRecommendation() {
+            const input = document.getElementById("counterPriceInput");
+            if (input) input.value = currentRecPrice;
+        }
+
+        async function sendCounteroffer(id) {
+            const price = document.getElementById("counterPriceInput").value;
+            const message = document.getElementById("counterNoteInput").value;
+
+            if (!price || parseFloat(price) <= 0) {
+                alert("Please enter a valid counteroffer price.");
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/negotiations/${id}/counter`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sender_id: currentUser.id,
+                        sender_role: currentUser.role || 'farmer',
+                        counter_price: price,
+                        message: message || undefined
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await loadNegotiations();
+                    loadNegotiationDetail(id);
+                } else {
+                    alert(data.message || "Failed to submit counteroffer");
+                }
+            } catch (e) {
+                alert("Network error: " + e.message);
+            }
+        }
+
+        async function acceptDeal(id) {
+            if (!confirm("Are you sure you want to accept this deal price?")) return;
+            try {
+                const res = await fetch(`/api/negotiations/${id}/accept`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: currentUser.id,
+                        user_role: currentUser.role || 'farmer'
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await loadNegotiations();
+                    loadNegotiationDetail(id);
+                }
+            } catch (e) {
+                alert("Network error: " + e.message);
+            }
+        }
+
+        async function rejectDeal(id) {
+            const reason = prompt("Reason for rejecting offer:");
+            if (reason === null) return;
+            try {
+                const res = await fetch(`/api/negotiations/${id}/reject`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: currentUser.id,
+                        user_role: currentUser.role || 'farmer',
+                        reason
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await loadNegotiations();
+                    loadNegotiationDetail(id);
+                }
+            } catch (e) {
+                alert("Network error: " + e.message);
+            }
+        }
+
+        async function convertDealToOrder(id) {
+            try {
+                const res = await fetch(`/api/negotiations/${id}/create-order`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ buyer_id: currentUser.id })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("Order created successfully! Redirecting to Orders...");
+                    window.location.href = "orders.html";
+                } else {
+                    alert(data.message || "Failed to create order");
+                }
+            } catch (e) {
+                alert("Network error: " + e.message);
+            }
+        }
+
+        // Modal functions
+        async function openNewNegotiationModal() {
+            document.getElementById("newNegModal").classList.add("open");
+            // Load crops
+            try {
+                const res = await fetch("/api/crops");
+                const data = await res.json();
+                if (data.success) {
+                    activeCropList = data.crops;
+                    const select = document.getElementById("modalCropSelect");
+                    select.innerHTML = activeCropList.map(c => `
+                        <option value="${c.id}" data-price="${c.price_per_kg}">
+                            ${c.crop_name} (${c.specific_name || ''}) – Asking ₹${c.price_per_kg}/kg
+                        </option>
+                    `).join('');
+                    updateModalCalc();
+                }
+            } catch (e) {}
+        }
+
+        function closeModal() {
+            document.getElementById("newNegModal").classList.remove("open");
+        }
+
+        function updateModalCalc() {
+            const select = document.getElementById("modalCropSelect");
+            const selectedOpt = select.options[select.selectedIndex];
+            if (!selectedOpt) return;
+            const asking = parseFloat(selectedOpt.getAttribute("data-price") || 50);
+            const qty = parseFloat(document.getElementById("modalQuantity").value || 100);
+            const offer = parseFloat(document.getElementById("modalOfferPrice").value || 42);
+
+            const total = offer * qty;
+            const askingTotal = asking * qty;
+            const savings = askingTotal - total;
+
+            document.getElementById("modalCalcCard").innerHTML = `
+                <strong>Deal Preview:</strong><br>
+                Asking: ₹${asking}/kg | Your Offer: ₹${offer}/kg | Volume: ${qty} kg<br>
+                Total Deal: ₹${total.toLocaleString('en-IN')} (Target savings: ₹${savings.toLocaleString('en-IN')})<br>
+                <span style="font-weight:600; color:#d97706;">💡 System Tip: Wholesale orders ≥100 kg qualify for automated volume counteroffers.</span>
+            `;
+        }
+
+        async function submitNewNegotiation() {
+            const cropId = document.getElementById("modalCropSelect").value;
+            const quantity = document.getElementById("modalQuantity").value;
+            const offeredPrice = document.getElementById("modalOfferPrice").value;
+            const notes = document.getElementById("modalNotes").value;
+
+            if (!cropId || !quantity || !offeredPrice) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            try {
+                const res = await fetch("/api/negotiations", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        crop_id: cropId,
+                        buyer_id: currentUser.id === 27 ? 28 : currentUser.id, // Ensure buyer initiated
+                        quantity,
+                        offered_price: offeredPrice,
+                        notes
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    closeModal();
+                    await loadNegotiations();
+                    loadNegotiationDetail(data.negotiation_id);
+                } else {
+                    alert(data.message || "Failed to initiate negotiation");
+                }
+            } catch (e) {
+                alert("Error: " + e.message);
+            }
+        }
+
+        // Initialize
+        loadNegotiations();
+    </script>
+</body>
+</html>

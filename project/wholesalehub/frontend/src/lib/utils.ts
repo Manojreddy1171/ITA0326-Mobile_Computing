@@ -14,18 +14,22 @@ export const formatIndianNumber = (num: number): string => {
   return new Intl.NumberFormat('en-IN').format(num);
 };
 
-// Time remaining string
-export const timeRemaining = (deadline: string | Date): string => {
+// Time remaining object/string
+export const timeRemaining = (deadline: string | Date): { ended: boolean; text: string; toString: () => string } => {
   const now = new Date();
   const end = new Date(deadline);
   const diff = end.getTime() - now.getTime();
-  if (diff <= 0) return 'Expired';
+  if (diff <= 0) {
+    return { ended: true, text: 'Expired', toString: () => 'Expired' };
+  }
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  if (days > 0) return `${days}d ${hours}h remaining`;
-  if (hours > 0) return `${hours}h ${minutes}m remaining`;
-  return `${minutes}m remaining`;
+  let text = '';
+  if (days > 0) text = `${days}d ${hours}h`;
+  else if (hours > 0) text = `${hours}h ${minutes}m`;
+  else text = `${minutes}m`;
+  return { ended: false, text, toString: () => `${text} remaining` };
 };
 
 // Format date
@@ -56,6 +60,8 @@ export const timeAgo = (date: string | Date): string => {
   if (days < 30) return `${days}d ago`;
   return formatDateShort(date);
 };
+
+export const formatRelativeTime = timeAgo;
 
 // Get tier discount for current quantity
 export const getTierDiscount = (

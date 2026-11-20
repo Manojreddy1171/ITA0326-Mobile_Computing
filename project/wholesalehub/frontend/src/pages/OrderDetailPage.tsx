@@ -25,8 +25,8 @@ export default function OrderDetailPage() {
     mutationFn: (newStatus: string) => api.patch(`/orders/${id}/status`, { status: newStatus }),
     onSuccess: (res) => {
       toast.success(`Order status updated to ${res.data.order.status}`);
-      queryClient.invalidateQueries(['order', id]);
-      queryClient.invalidateQueries(['orders']);
+      queryClient.invalidateQueries({ queryKey: ['order', id] });
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
     },
     onError: (err: any) => {
       toast.error(err.response?.data?.error || 'Failed to update order status');

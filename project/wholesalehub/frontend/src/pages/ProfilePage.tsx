@@ -6,7 +6,7 @@ import api from '../lib/api';
 import { useAuthStore } from '../store/authStore';
 
 export default function ProfilePage() {
-  const { user, setUser, logout } = useAuthStore();
+  const { user, updateUser, logout } = useAuthStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
@@ -45,7 +45,7 @@ export default function ProfilePage() {
     mutationFn: (body: any) => api.patch('/auth/profile', body),
     onSuccess: (res) => {
       toast.success('Business profile updated successfully!');
-      setUser(res.data.user);
+      updateUser(res.data.user);
     },
     onError: (err: any) => {
       toast.error(err.response?.data?.error || 'Profile update failed');
@@ -63,7 +63,7 @@ export default function ProfilePage() {
     onSuccess: (res) => {
       toast.success('Profile avatar updated!');
       if (user) {
-        setUser({ ...user, avatar_url: res.data.avatar_url });
+        updateUser({ avatar_url: res.data.avatar_url });
       }
     },
     onError: () => toast.error('Avatar upload failed'),

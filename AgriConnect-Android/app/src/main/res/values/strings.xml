@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AgriConnect</string>
+    <string name="server_url_key">server_url</string>
+    <string name="server_url_default">http://10.0.2.2:5000</string>
+    <string name="loading">Loading AgriConnect…</string>
+    <string name="retry">Retry</string>
+    <string name="server_settings">Server Settings</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+</resources>

@@ -30,7 +30,7 @@ export default function ProductDetailPage() {
     onSuccess: () => {
       toast.success('Offer sent!');
       setShowOfferForm(false);
-      queryClient.invalidateQueries(['offers']);
+      queryClient.invalidateQueries({ queryKey: ['offers'] });
     },
     onError: (err: any) => toast.error(err.response?.data?.error || 'Failed to send offer'),
   });
@@ -39,7 +39,7 @@ export default function ProductDetailPage() {
     mutationFn: ({ poolId, quantity }: any) => api.post(`/pools/${poolId}/join`, { quantity }),
     onSuccess: () => {
       toast.success('Joined group pool!');
-      queryClient.invalidateQueries(['product', id]);
+      queryClient.invalidateQueries({ queryKey: ['product', id] });
     },
     onError: (err: any) => toast.error(err.response?.data?.error || 'Failed to join pool'),
   });
@@ -264,8 +264,8 @@ export default function ProductDetailPage() {
               />
             </div>
             <div className="flex gap-3">
-              <button type="submit" disabled={offerMutation.isLoading} className="btn-primary flex-1">
-                {offerMutation.isLoading ? <span className="spinner" /> : '📤 Send Offer'}
+              <button type="submit" disabled={offerMutation.isPending} className="btn-primary flex-1">
+                {offerMutation.isPending ? <span className="spinner" /> : '📤 Send Offer'}
               </button>
               <button type="button" onClick={() => setShowOfferForm(false)} className="btn-secondary">
                 Cancel
@@ -281,7 +281,7 @@ export default function ProductDetailPage() {
           <div className="flex items-center gap-2 mb-4">
             <Users className="w-5 h-5 text-orange-400" />
             <h3 className="font-display text-lg font-bold text-white">Group Deal Active</h3>
-            <span className="badge badge-orange">{timeRemaining(pool.deadline)}</span>
+            <span className="badge badge-orange">{timeRemaining(pool.deadline).text}</span>
           </div>
 
           <h4 className="font-semibold text-white mb-1">{pool.title}</h4>
@@ -332,9 +332,9 @@ export default function ProductDetailPage() {
                   joinPoolMutation.mutate({ poolId: pool.id, quantity: qty });
                 }}
                 className="btn-primary flex-1"
-                disabled={joinPoolMutation.isLoading}
+                disabled={joinPoolMutation.isPending}
               >
-                {joinPoolMutation.isLoading ? <span className="spinner" /> : <><Users className="w-4 h-4" /> Join Pool</>}
+                {joinPoolMutation.isPending ? <span className="spinner" /> : <><Users className="w-4 h-4" /> Join Pool</>}
               </button>
               <Link to={`/pools/${pool.id}`} className="btn-secondary btn-sm">
                 Details <ChevronRight className="w-3 h-3" />

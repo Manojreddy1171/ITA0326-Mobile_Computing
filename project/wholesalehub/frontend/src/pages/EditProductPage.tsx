@@ -108,7 +108,7 @@ export default function EditProductPage() {
     },
     onSuccess: () => {
       toast.success('Product updated successfully!');
-      queryClient.invalidateQueries(['product', id]);
+      queryClient.invalidateQueries({ queryKey: ['product', id] });
       navigate(`/products/${id}`);
     },
     onError: (err: any) => {

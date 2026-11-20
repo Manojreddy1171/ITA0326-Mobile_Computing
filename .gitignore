@@ -4,8 +4,17 @@ Thumbs.db
 desktop.ini
 *.log
 
-# Node & Dependencies (if any added)
+# Node & Dependencies
 node_modules/
 dist/
 .vscode/
 .idea/
+
+# Android build artifacts
+.gradle/
+.kotlin/
+local.properties
+**/build/
+**/app/build/
+.git_backup/
+**/.git_backup/

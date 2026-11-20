@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Allow cleartext HTTP to our backend server for local demo -->
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- Android emulator host alias for the PC -->
+        <domain includeSubdomains="false">10.0.2.2</domain>
+        <!-- Wi-Fi IP of the PC (for physical device) -->
+        <domain includeSubdomains="false">10.66.232.95</domain>
+        <domain includeSubdomains="false">localhost</domain>
+        <domain includeSubdomains="false">192.168.1.0</domain>
+        <domain includeSubdomains="false">192.168.56.1</domain>
+    </domain-config>
+</network-security-config>

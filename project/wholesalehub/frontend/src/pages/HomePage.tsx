@@ -46,7 +46,7 @@ export default function HomePage() {
       });
       return api.get(`/products?${params}`).then(r => r.data);
     },
-    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
   });
 
   const { data: poolsData } = useQuery({
@@ -54,9 +54,9 @@ export default function HomePage() {
     queryFn: () => api.get('/pools?status=active&limit=3').then(r => r.data),
   });
 
-  const products = data?.products || [];
-  const pagination = data?.pagination;
-  const activePools = poolsData?.pools || [];
+  const products = (data as any)?.products || [];
+  const pagination = (data as any)?.pagination;
+  const activePools = (poolsData as any)?.pools || [];
 
   return (
     <div className="min-h-screen bg-gradient-hero">

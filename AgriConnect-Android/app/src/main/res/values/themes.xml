@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.AgriConnect" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#2e7d32</item>
+        <item name="colorPrimaryVariant">#1b5e20</item>
+        <item name="colorOnPrimary">#ffffff</item>
+        <item name="colorSecondary">#81c784</item>
+        <item name="colorOnSecondary">#000000</item>
+        <item name="colorSurface">#ffffff</item>
+        <item name="colorOnSurface">#1a1a1a</item>
+        <item name="android:statusBarColor">#1b5e20</item>
+        <item name="android:navigationBarColor">#2e7d32</item>
+    </style>
+</resources>
