@@ -209,15 +209,16 @@ const createCampaign = (req, res) => {
 const joinCampaign = (req, res) => {
     const { id } = req.params;
     const { buyer_id, quantity, notes } = req.body;
+    const rawQty = quantity != null ? quantity : req.body.committed_quantity;
 
-    if (!buyer_id || !quantity || parseFloat(quantity) <= 0) {
+    if (!buyer_id || rawQty == null || parseFloat(rawQty) <= 0) {
         return res.status(400).json({
             success: false,
-            message: "Buyer ID and valid commitment quantity are required."
+            message: "Buyer ID and valid commitment quantity greater than zero are required."
         });
     }
 
-    const commitQty = parseFloat(quantity);
+    const commitQty = parseFloat(rawQty);
 
     // Fetch campaign details with fresh query
     db.query("SELECT * FROM group_buying_campaigns WHERE id = ?", [id], (err, rows) => {
@@ -226,6 +227,13 @@ const joinCampaign = (req, res) => {
         }
 
         const campaign = rows[0];
+
+        if (campaign.end_date && new Date(campaign.end_date) < new Date()) {
+            return res.status(400).json({
+                success: false,
+                message: "This campaign has expired and cannot accept new commitments."
+            });
+        }
 
         if (campaign.status !== "active" && campaign.status !== "target_reached") {
             return res.status(400).json({
@@ -418,11 +426,61 @@ const getSmartRecommendations = (req, res) => {
     });
 };
 
+// =====================================================
+// CANCEL COMMITMENT (BUYER)
+// =====================================================
+const cancelCommitment = (req, res) => {
+    const { id } = req.params;
+    const { buyer_id, reason } = req.body;
+
+    const sql = `
+        SELECT gbcom.*, gbc.status AS campaign_status, gbc.current_committed_quantity, gbc.min_target_quantity
+        FROM group_buying_commitments gbcom
+        JOIN group_buying_campaigns gbc ON gbcom.campaign_id = gbc.id
+        WHERE gbcom.id = ? AND gbcom.status = 'committed'
+    `;
+
+    db.query(sql, [id], (err, rows) => {
+        if (err || rows.length === 0) {
+            return res.status(404).json({ success: false, message: "Active commitment not found." });
+        }
+
+        const com = rows[0];
+
+        if (buyer_id && com.buyer_id != buyer_id) {
+            return res.status(403).json({ success: false, message: "Unauthorized to cancel this commitment." });
+        }
+
+        if (com.campaign_status === "completed" || com.campaign_status === "cancelled") {
+            return res.status(400).json({ success: false, message: `Cannot cancel commitment for a ${com.campaign_status} campaign.` });
+        }
+
+        const newQty = Math.max(0, parseFloat(com.current_committed_quantity) - parseFloat(com.quantity));
+        const newStatus = newQty >= parseFloat(com.min_target_quantity) ? "target_reached" : "active";
+
+        db.query("UPDATE group_buying_commitments SET status = 'cancelled', updated_at = NOW() WHERE id = ?", [id], (cErr) => {
+            if (cErr) {
+                return res.status(500).json({ success: false, message: "Failed to cancel commitment." });
+            }
+
+            db.query("UPDATE group_buying_campaigns SET current_committed_quantity = ?, status = ?, updated_at = NOW() WHERE id = ?", [newQty, newStatus, com.campaign_id], () => {
+                res.json({
+                    success: true,
+                    message: "Commitment successfully cancelled and group demand recalculated.",
+                    new_campaign_quantity: newQty,
+                    new_campaign_status: newStatus
+                });
+            });
+        });
+    });
+};
+
 module.exports = {
     getCampaigns,
     getCampaignById,
     createCampaign,
     joinCampaign,
+    cancelCommitment,
     getBuyerCommitments,
     getSmartRecommendations
 };

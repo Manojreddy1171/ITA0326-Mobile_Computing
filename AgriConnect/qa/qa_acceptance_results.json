@@ -1,0 +1,183 @@
+{
+  "totalAssertions": 25,
+  "passedAssertions": 25,
+  "failedAssertions": 0,
+  "isDemoReady": true,
+  "results": [
+    {
+      "gate": "GATE 1",
+      "testName": "Express Server running on port 5000",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "gate": "GATE 1",
+      "testName": "MySQL Database connected and queryable",
+      "expected": 1,
+      "actual": 1,
+      "passed": true
+    },
+    {
+      "gate": "GATE 2",
+      "testName": "Farmer Authentication & Session Generation",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "gate": "GATE 2",
+      "testName": "Buyer Authentication & Session Generation",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "gate": "GATE 2",
+      "testName": "Security: Rejection of Invalid Passwords",
+      "expected": 401,
+      "actual": 401,
+      "passed": true
+    },
+    {
+      "gate": "GATE 3",
+      "testName": "Crops Retrieved from Database",
+      "expected": ">= 4 crops",
+      "actual": 15,
+      "passed": true
+    },
+    {
+      "gate": "GATE 3",
+      "testName": "Crop Schema Integrity (Pricing & Stock)",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "gate": "GATE 4",
+      "testName": "Rule-Based Recommendation Engine",
+      "expected": "Between 45 and 48",
+      "actual": 46.6,
+      "passed": true
+    },
+    {
+      "gate": "GATE 4",
+      "testName": "Buyer Creates Wholesale Offer (Status: Pending)",
+      "expected": 201,
+      "actual": 201,
+      "passed": true
+    },
+    {
+      "gate": "GATE 4",
+      "testName": "Farmer Counteroffer (₹47/kg)",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "gate": "GATE 4",
+      "testName": "Buyer Accepts Counteroffer (Status: Accepted)",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "gate": "GATE 4",
+      "testName": "Agreement Persisted with Unit Price ₹47/kg",
+      "expected": "accepted / 47",
+      "actual": "accepted / 47.00",
+      "passed": true
+    },
+    {
+      "gate": "GATE 4",
+      "testName": "Boundary Validation: Prevent Negative Prices",
+      "expected": 400,
+      "actual": 400,
+      "passed": true
+    },
+    {
+      "gate": "GATE 4",
+      "testName": "Boundary Validation: Prevent Zero Quantities",
+      "expected": 400,
+      "actual": 400,
+      "passed": true
+    },
+    {
+      "gate": "GATE 4",
+      "testName": "Boundary Validation: Prevent Duplicate Acceptance",
+      "expected": 400,
+      "actual": 400,
+      "passed": true
+    },
+    {
+      "gate": "GATE 5",
+      "testName": "Product Image Gallery Retrieval",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "gate": "GATE 5",
+      "testName": "Primary Cover Selection & Update",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "gate": "GATE 5",
+      "testName": "Negative Validation: Empty Upload Rejection",
+      "expected": 400,
+      "actual": 400,
+      "passed": true
+    },
+    {
+      "gate": "GATE 6",
+      "testName": "Cooperative Pooling Milestone: 500 kg Reached (100%)",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "gate": "GATE 6",
+      "testName": "Four Buyers Demand Pooling Verification",
+      "expected": "4 buyers / >=500 kg",
+      "actual": "4 buyers / 500.00 kg",
+      "passed": true
+    },
+    {
+      "gate": "GATE 6",
+      "testName": "Smart Demand Insights & Campaign Recommendations",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "gate": "GATE 7",
+      "testName": "All 14 Core Portals & Dashboards Return HTTP 200",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "gate": "GATE 8",
+      "testName": "Sliding Drawer, #sidebarOverlay Backdrop & Desktop Offset",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "gate": "GATE 9",
+      "testName": "Real SQL Aggregation Platform Metrics",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "gate": "GATE 10",
+      "testName": "Full Relational Persistence Across All Modules",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    }
+  ]
+}

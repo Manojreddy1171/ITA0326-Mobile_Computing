@@ -5,6 +5,7 @@ const {
     getCampaignById,
     createCampaign,
     joinCampaign,
+    cancelCommitment,
     getBuyerCommitments,
     getSmartRecommendations
 } = require("../controllers/groupBuyingController");
@@ -14,6 +15,7 @@ router.get("/recommendations", getSmartRecommendations);
 
 // Buyer's committed purchases
 router.get("/my-commitments/:buyer_id", getBuyerCommitments);
+router.post("/commitments/:id/cancel", cancelCommitment);
 
 // Campaign endpoints
 router.get("/", getCampaigns);

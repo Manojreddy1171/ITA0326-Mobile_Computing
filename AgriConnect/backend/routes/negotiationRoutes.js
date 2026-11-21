@@ -21,6 +21,7 @@ router.get("/:id", getNegotiationById);
 router.post("/:id/counter", submitCounteroffer);
 router.post("/:id/accept", acceptNegotiation);
 router.post("/:id/reject", rejectNegotiation);
+router.post("/:id/cancel", rejectNegotiation);
 router.post("/:id/create-order", convertToOrder);
 
 module.exports = router;

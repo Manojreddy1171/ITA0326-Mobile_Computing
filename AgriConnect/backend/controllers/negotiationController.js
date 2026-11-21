@@ -117,6 +117,27 @@ const createNegotiation = (req, res) => {
             const offeredPrice = parseFloat(offered_price);
             const qty = parseFloat(quantity);
 
+            if (isNaN(offeredPrice) || offeredPrice <= 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Offered price must be a positive number greater than zero."
+                });
+            }
+
+            if (isNaN(qty) || qty <= 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Requested quantity must be a positive number greater than zero."
+                });
+            }
+
+            if (crop.stock && qty > parseFloat(crop.stock)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Requested quantity (${qty} kg) exceeds available stock (${crop.stock} kg).`
+                });
+            }
+
             // Compute reference and recommendation
             const marketRef = Math.round(askingPrice * 0.96);
             const minAcceptable = Math.round(askingPrice * 0.82);
@@ -353,6 +374,13 @@ const submitCounteroffer = (req, res) => {
 
     const counterPrice = parseFloat(counter_price);
 
+    if (isNaN(counterPrice) || counterPrice <= 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Counter price must be a positive number greater than zero."
+        });
+    }
+
     // Fetch current negotiation
     db.query("SELECT * FROM negotiations WHERE id = ?", [id], (err, rows) => {
         if (err || rows.length === 0) {
@@ -361,10 +389,24 @@ const submitCounteroffer = (req, res) => {
 
         const neg = rows[0];
 
-        if (neg.status === "accepted" || neg.status === "rejected") {
+        if (["accepted", "rejected", "cancelled", "expired"].includes(neg.status)) {
             return res.status(400).json({
                 success: false,
                 message: `Negotiation is already ${neg.status} and cannot be countered.`
+            });
+        }
+
+        if (sender_role === "farmer" && neg.farmer_id != sender_id) {
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized: only the crop owner farmer can submit a counteroffer."
+            });
+        }
+
+        if (sender_role === "buyer" && neg.buyer_id != sender_id) {
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized: only the negotiating buyer can submit a counteroffer."
             });
         }
 
@@ -425,6 +467,21 @@ const acceptNegotiation = (req, res) => {
         }
 
         const neg = rows[0];
+
+        if (neg.status === "accepted") {
+            return res.status(400).json({
+                success: false,
+                message: "Negotiation is already accepted."
+            });
+        }
+
+        if (["rejected", "cancelled", "expired"].includes(neg.status)) {
+            return res.status(400).json({
+                success: false,
+                message: `Cannot accept negotiation with status '${neg.status}'.`
+            });
+        }
+
         const finalPrice = neg.current_counter_price || neg.offered_price;
 
         const updateSql = `
