@@ -204,7 +204,7 @@ const createCampaign = (req, res) => {
 };
 
 // =====================================================
-// JOIN CAMPAIGN & POOL DEMAND (BUYER) - TRANSACTION SAFE
+// JOIN CAMPAIGN & POOL DEMAND (BUYER) - TRANSACTION & CONCURRENCY SAFE
 // =====================================================
 const joinCampaign = (req, res) => {
     const { id } = req.params;
@@ -220,118 +220,176 @@ const joinCampaign = (req, res) => {
 
     const commitQty = parseFloat(rawQty);
 
-    // Fetch campaign details with fresh query
-    db.query("SELECT * FROM group_buying_campaigns WHERE id = ?", [id], (err, rows) => {
-        if (err || rows.length === 0) {
-            return res.status(404).json({ success: false, message: "Campaign not found." });
+    // Concurrency-Safe Transaction with Row-Level Lock
+    db.getConnection((err, conn) => {
+        if (err) {
+            console.error("DB connection error in joinCampaign:", err);
+            return res.status(500).json({ success: false, message: "Database connection failed." });
         }
 
-        const campaign = rows[0];
-
-        if (campaign.end_date && new Date(campaign.end_date) < new Date()) {
-            return res.status(400).json({
-                success: false,
-                message: "This campaign has expired and cannot accept new commitments."
-            });
-        }
-
-        if (campaign.status !== "active" && campaign.status !== "target_reached") {
-            return res.status(400).json({
-                success: false,
-                message: `This campaign is ${campaign.status} and cannot accept new commitments.`
-            });
-        }
-
-        // Validate limits
-        if (commitQty < parseFloat(campaign.min_per_buyer)) {
-            return res.status(400).json({
-                success: false,
-                message: `Minimum order for this group pool is ${campaign.min_per_buyer} kg.`
-            });
-        }
-
-        if (commitQty > parseFloat(campaign.max_per_buyer)) {
-            return res.status(400).json({
-                success: false,
-                message: `Maximum order per buyer is ${campaign.max_per_buyer} kg.`
-            });
-        }
-
-        const remainingStock = parseFloat(campaign.max_available_quantity) - parseFloat(campaign.current_committed_quantity);
-        if (commitQty > remainingStock) {
-            return res.status(400).json({
-                success: false,
-                message: `Only ${remainingStock} kg remaining available in this campaign.`
-            });
-        }
-
-        const unitPrice = parseFloat(campaign.group_price);
-        const totalAmount = unitPrice * commitQty;
-        const newCommittedQty = parseFloat(campaign.current_committed_quantity) + commitQty;
-        const targetReached = newCommittedQty >= parseFloat(campaign.min_target_quantity);
-        const newStatus = targetReached ? "target_reached" : "active";
-
-        // Insert commitment
-        const commitSql = `
-            INSERT INTO group_buying_commitments
-            (campaign_id, buyer_id, quantity, unit_price, total_amount, status, notes)
-            VALUES (?, ?, ?, ?, ?, 'committed', ?)
-        `;
-
-        db.query(commitSql, [id, buyer_id, commitQty, unitPrice, totalAmount, notes || null], (cErr, cResult) => {
-            if (cErr) {
-                console.error("Commitment error:", cErr);
-                return res.status(500).json({ success: false, message: "Failed to record commitment." });
+        conn.beginTransaction((bErr) => {
+            if (bErr) {
+                conn.release();
+                return res.status(500).json({ success: false, message: "Transaction start failed." });
             }
 
-            // Update campaign totals & status
-            const updateCampaignSql = `
-                UPDATE group_buying_campaigns
-                SET current_committed_quantity = ?, status = ?, updated_at = NOW()
-                WHERE id = ?
-            `;
-
-            db.query(updateCampaignSql, [newCommittedQty, newStatus, id], (uErr) => {
-                if (uErr) {
-                    console.error("Update campaign total error:", uErr);
+            conn.query("SELECT * FROM group_buying_campaigns WHERE id = ? FOR UPDATE", [id], (qErr, rows) => {
+                if (qErr || rows.length === 0) {
+                    return conn.rollback(() => {
+                        conn.release();
+                        res.status(404).json({ success: false, message: "Campaign not found." });
+                    });
                 }
 
-                // Milestone Notification triggers
-                const prevPct = (parseFloat(campaign.current_committed_quantity) / parseFloat(campaign.min_target_quantity)) * 100;
-                const newPct = (newCommittedQty / parseFloat(campaign.min_target_quantity)) * 100;
+                const campaign = rows[0];
 
-                let milestoneTitle = null;
-                let milestoneMsg = null;
-
-                if (targetReached && campaign.status !== "target_reached") {
-                    milestoneTitle = "Group Target Reached! (100%)";
-                    milestoneMsg = `Campaign "${campaign.title}" reached its full target of ${campaign.min_target_quantity} kg! Wholesale rate ₹${unitPrice}/kg unlocked!`;
-                } else if (newPct >= 75 && prevPct < 75) {
-                    milestoneTitle = "Campaign Milestone: 75% Reached";
-                    milestoneMsg = `Campaign "${campaign.title}" is 75% filled! Only ${campaign.min_target_quantity - newCommittedQty} kg to wholesale unlock.`;
-                } else if (newPct >= 50 && prevPct < 50) {
-                    milestoneTitle = "Campaign Milestone: 50% Reached";
-                    milestoneMsg = `Campaign "${campaign.title}" has reached half of its target volume!`;
+                if (campaign.end_date && new Date(campaign.end_date) < new Date()) {
+                    return conn.rollback(() => {
+                        conn.release();
+                        res.status(400).json({
+                            success: false,
+                            message: "This campaign has expired and cannot accept new commitments."
+                        });
+                    });
                 }
 
-                if (milestoneTitle) {
-                    db.query(
-                        "INSERT INTO notifications (user_id, title, message, type) VALUES (?, ?, ?, 'order')",
-                        [campaign.farmer_id, milestoneTitle, milestoneMsg]
-                    );
-                    db.query(
-                        "INSERT INTO notifications (user_id, title, message, type) VALUES (?, ?, ?, 'order')",
-                        [buyer_id, milestoneTitle, milestoneMsg]
-                    );
+                if (campaign.status !== "active" && campaign.status !== "target_reached") {
+                    return conn.rollback(() => {
+                        conn.release();
+                        res.status(400).json({
+                            success: false,
+                            message: `This campaign is ${campaign.status} and cannot accept new commitments.`
+                        });
+                    });
                 }
 
-                res.status(201).json({
-                    success: true,
-                    message: `Successfully joined group pool with ${commitQty} kg!`,
-                    commitment_id: cResult.insertId,
-                    total_committed: newCommittedQty,
-                    target_reached: targetReached,
-                    savings: (parseFloat(campaign.original_price) - unitPrice) * commitQty
+                // Validate limits
+                if (commitQty < parseFloat(campaign.min_per_buyer)) {
+                    return conn.rollback(() => {
+                        conn.release();
+                        res.status(400).json({
+                            success: false,
+                            message: `Minimum order for this group pool is ${campaign.min_per_buyer} kg.`
+                        });
+                    });
+                }
+
+                if (commitQty > parseFloat(campaign.max_per_buyer)) {
+                    return conn.rollback(() => {
+                        conn.release();
+                        res.status(400).json({
+                            success: false,
+                            message: `Maximum order per buyer is ${campaign.max_per_buyer} kg.`
+                        });
+                    });
+                }
+
+                const remainingStock = parseFloat(campaign.max_available_quantity) - parseFloat(campaign.current_committed_quantity);
+                if (commitQty > remainingStock) {
+                    return conn.rollback(() => {
+                        conn.release();
+                        res.status(400).json({
+                            success: false,
+                            message: `Only ${remainingStock} kg remaining available in this campaign.`
+                        });
+                    });
+                }
+
+                const unitPrice = parseFloat(campaign.group_price);
+                const totalAmount = unitPrice * commitQty;
+                const newCommittedQty = parseFloat(campaign.current_committed_quantity) + commitQty;
+                const targetReached = newCommittedQty >= parseFloat(campaign.min_target_quantity);
+                const newStatus = targetReached ? "target_reached" : "active";
+
+                // Insert commitment
+                const commitSql = `
+                    INSERT INTO group_buying_commitments
+                    (campaign_id, buyer_id, quantity, unit_price, total_amount, status, notes)
+                    VALUES (?, ?, ?, ?, ?, 'committed', ?)
+                `;
+
+                conn.query(commitSql, [id, buyer_id, commitQty, unitPrice, totalAmount, notes || null], (cErr, cResult) => {
+                    if (cErr) {
+                        return conn.rollback(() => {
+                            conn.release();
+                            console.error("Commitment insert error:", cErr);
+                            res.status(500).json({ success: false, message: "Failed to record commitment." });
+                        });
+                    }
+
+                    // Update campaign totals & status
+                    const updateCampaignSql = `
+                        UPDATE group_buying_campaigns
+                        SET current_committed_quantity = ?, status = ?, updated_at = NOW()
+                        WHERE id = ?
+                    `;
+
+                    conn.query(updateCampaignSql, [newCommittedQty, newStatus, id], (uErr) => {
+                        if (uErr) {
+                            return conn.rollback(() => {
+                                conn.release();
+                                console.error("Update campaign total error:", uErr);
+                                res.status(500).json({ success: false, message: "Failed to update campaign totals." });
+                            });
+                        }
+
+                        conn.commit((commitErr) => {
+                            if (commitErr) {
+                                return conn.rollback(() => {
+                                    conn.release();
+                                    res.status(500).json({ success: false, message: "Transaction commit failed." });
+                                });
+                            }
+
+                            conn.release();
+
+                            // Notifications (fire-and-forget after transaction is committed)
+                            const prevPct = (parseFloat(campaign.current_committed_quantity) / parseFloat(campaign.min_target_quantity)) * 100;
+                            const newPct = (newCommittedQty / parseFloat(campaign.min_target_quantity)) * 100;
+
+                            let milestoneTitle = null;
+                            let milestoneMsg = null;
+
+                            if (targetReached && campaign.status !== "target_reached") {
+                                milestoneTitle = "Group Target Reached! (100%)";
+                                milestoneMsg = `Campaign "${campaign.title}" reached its full target of ${campaign.min_target_quantity} kg! Wholesale rate ₹${unitPrice}/kg unlocked!`;
+                            } else if (newPct >= 75 && prevPct < 75) {
+                                milestoneTitle = "Campaign Milestone: 75% Reached";
+                                milestoneMsg = `Campaign "${campaign.title}" is 75% filled! Only ${campaign.min_target_quantity - newCommittedQty} kg to wholesale unlock.`;
+                            } else if (newPct >= 50 && prevPct < 50) {
+                                milestoneTitle = "Campaign Milestone: 50% Reached";
+                                milestoneMsg = `Campaign "${campaign.title}" has reached half of its target volume!`;
+                            }
+
+                            if (milestoneTitle) {
+                                db.query(
+                                    "INSERT INTO notifications (user_id, title, message, type) VALUES (?, ?, ?, 'order')",
+                                    [campaign.farmer_id, milestoneTitle, milestoneMsg],
+                                    () => {}
+                                );
+                                db.query(
+                                    "INSERT INTO notifications (user_id, title, message, type) VALUES (?, ?, ?, 'order')",
+                                    [buyer_id, milestoneTitle, milestoneMsg],
+                                    () => {}
+                                );
+                            }
+
+                            res.status(201).json({
+                                success: true,
+                                message: `Successfully joined group pool with ${commitQty} kg!`,
+                                commitment_id: cResult.insertId,
+                                campaign_id: parseInt(id),
+                                committed_quantity: commitQty,
+                                unit_price: unitPrice,
+                                total_amount: totalAmount,
+                                campaign_status: newStatus,
+                                current_committed_quantity: newCommittedQty,
+                                total_committed: newCommittedQty,
+                                target_reached: targetReached,
+                                savings: (parseFloat(campaign.original_price) - unitPrice) * commitQty
+                            });
+                        });
+                    });
                 });
             });
         });

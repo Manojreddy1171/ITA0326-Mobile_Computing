@@ -43,7 +43,7 @@
       "gate": "GATE 3",
       "testName": "Crops Retrieved from Database",
       "expected": ">= 4 crops",
-      "actual": 15,
+      "actual": 20,
       "passed": true
     },
     {

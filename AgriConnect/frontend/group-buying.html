@@ -793,6 +793,11 @@
                     alert(data.message || "Successfully committed to group pool!");
                     closeModal("joinModal");
                     loadCampaigns();
+
+        // Auto-poll active campaigns every 5 seconds so demand pooling progress updates smoothly
+        setInterval(() => {
+            loadCampaigns();
+        }, 5000);
                 } else {
                     alert(data.message || "Failed to commit order");
                 }
@@ -894,6 +899,11 @@
                     alert("Campaign launched successfully!");
                     closeModal("createModal");
                     loadCampaigns();
+
+        // Auto-poll active campaigns every 5 seconds so demand pooling progress updates smoothly
+        setInterval(() => {
+            loadCampaigns();
+        }, 5000);
                 } else {
                     alert(data.message || "Failed to create campaign");
                 }
@@ -907,6 +917,11 @@
         }
 
         loadCampaigns();
+
+        // Auto-poll active campaigns every 5 seconds so demand pooling progress updates smoothly
+        setInterval(() => {
+            loadCampaigns();
+        }, 5000);
     </script>
     <script src="assets/agri-theme-lang.js"></script>
 </body>

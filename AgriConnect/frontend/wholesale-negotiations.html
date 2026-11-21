@@ -1243,6 +1243,22 @@
 
         // Initialize
         loadNegotiations();
+
+        // Auto-poll active negotiation every 4 seconds to sync offers between farmer & buyer in real time
+        setInterval(async () => {
+            if (activeNegotiationId) {
+                try {
+                    const res = await fetch(`/api/negotiations/${activeNegotiationId}`);
+                    const data = await res.json();
+                    if (data.success && data.timeline) {
+                        const currentCount = document.querySelectorAll("#timelineScroll .timeline-bubble").length;
+                        if (data.timeline.length !== currentCount) {
+                            loadNegotiationDetail(activeNegotiationId);
+                        }
+                    }
+                } catch (e) {}
+            }
+        }, 4000);
     </script>
     <script src="assets/agri-theme-lang.js"></script>
 </body>

@@ -1,0 +1,106 @@
+{
+  "total": 10,
+  "passed": 10,
+  "failed": 0,
+  "isSuccess": true,
+  "testResults": [
+    {
+      "testId": "TEST A",
+      "name": "Product persists in MySQL and is retrievable by buyer accounts",
+      "passed": true,
+      "details": {
+        "newCropId": 23,
+        "dbMatches": true,
+        "apiMatches": true
+      }
+    },
+    {
+      "testId": "TEST B",
+      "name": "Product edits (price & stock) persist accurately in database",
+      "passed": true,
+      "details": {
+        "priceMatches": true,
+        "qtyMatches": true
+      }
+    },
+    {
+      "testId": "TEST C",
+      "name": "Negotiation multi-turn workflow persists final accepted agreement",
+      "passed": true,
+      "details": {
+        "status": "accepted",
+        "finalPrice": "65.00"
+      }
+    },
+    {
+      "testId": "TEST D",
+      "name": "Crop images persist in MySQL crop_images table and link to product",
+      "passed": true,
+      "details": {
+        "imageId": 15,
+        "hasImg": true
+      }
+    },
+    {
+      "testId": "TEST E",
+      "name": "Group buying 500 kg milestone persists with authoritative database totals",
+      "passed": true,
+      "details": {
+        "campaignStatus": "target_reached",
+        "totalCommitted": "550.00"
+      }
+    },
+    {
+      "testId": "TEST F",
+      "name": "Concurrency guard prevents overselling and maintains database integrity",
+      "passed": true,
+      "details": {
+        "committedQty": 80,
+        "maxQty": 200,
+        "noOversell": true,
+        "statuses": [
+          201,
+          201,
+          201
+        ]
+      }
+    },
+    {
+      "testId": "TEST G",
+      "name": "Dashboard metrics accurately reflect real-time MySQL row counts",
+      "passed": true,
+      "details": {
+        "apiUsers": 15,
+        "dbUsers": 15,
+        "apiCrops": 21,
+        "dbCrops": 21
+      }
+    },
+    {
+      "testId": "TEST H",
+      "name": "Cross-device queries return identical, authoritative database responses",
+      "passed": true,
+      "details": {
+        "sessionsConsistent": true
+      }
+    },
+    {
+      "testId": "TEST I",
+      "name": "All relational data persists in MySQL disk storage across service restarts",
+      "passed": true,
+      "details": {
+        "cropId": 23,
+        "cropName": "Organic Honey Carrots 1795249421550"
+      }
+    },
+    {
+      "testId": "TEST J",
+      "name": "Graceful error boundaries handle invalid requests and network errors",
+      "passed": true,
+      "details": {
+        "negativePriceStatus": 400,
+        "notFoundStatus": 404
+      }
+    }
+  ]
+}

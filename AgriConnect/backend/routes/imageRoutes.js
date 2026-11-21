@@ -49,8 +49,18 @@ router.post("/single", upload.single("image"), uploadGeneralImage);
 
 // Crop multi-images
 router.post("/crops/:id", upload.array("images", 5), uploadCropImages);
+router.post("/crops/:id/upload", upload.array("images", 5), uploadCropImages);
 router.get("/crops/:id", getCropImages);
+router.get("/crop/:id", getCropImages);
 router.put("/crops/:id/primary/:imageId", setPrimaryImage);
+router.put("/:imageId/set-primary", (req, res, next) => {
+    req.params.id = req.body.crop_id;
+    return setPrimaryImage(req, res, next);
+});
 router.delete("/crops/:id/:imageId", deleteCropImage);
+router.delete("/:imageId", (req, res, next) => {
+    req.params.id = req.body.crop_id || req.query.crop_id;
+    return deleteCropImage(req, res, next);
+});
 
 module.exports = router;

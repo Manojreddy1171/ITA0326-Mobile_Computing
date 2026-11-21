@@ -593,26 +593,38 @@ const convertToOrder = (req, res) => {
 
         const orderSql = `
             INSERT INTO orders
-            (buyer_id, crop_id, quantity, total_price, status)
-            VALUES (?, ?, ?, ?, 'pending')
+            (buyer_id, farmer_id, crop_id, quantity, price_per_kg, total_amount, delivery_address, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')
         `;
 
-        db.query(orderSql, [neg.buyer_id, neg.crop_id, neg.quantity, totalAmount], (orderErr, orderResult) => {
-            if (orderErr) {
-                console.error("Order creation from negotiation error:", orderErr);
-                return res.status(500).json({ success: false, message: "Failed to generate order." });
+        db.query(
+            orderSql,
+            [
+                neg.buyer_id,
+                neg.farmer_id,
+                neg.crop_id,
+                neg.quantity,
+                finalPrice,
+                totalAmount,
+                delivery_address || "Standard Delivery Address"
+            ],
+            (orderErr, orderResult) => {
+                if (orderErr) {
+                    console.error("Order creation from negotiation error:", orderErr);
+                    return res.status(500).json({ success: false, message: "Failed to generate order." });
+                }
+
+                // Deduct stock from crops table
+                db.query("UPDATE crops SET quantity = GREATEST(0, quantity - ?) WHERE id = ?", [neg.quantity, neg.crop_id]);
+
+                res.status(201).json({
+                    success: true,
+                    message: "Order successfully generated from negotiated agreement!",
+                    order_id: orderResult.insertId,
+                    total_amount: totalAmount
+                });
             }
-
-            // Deduct stock from crops table
-            db.query("UPDATE crops SET quantity = GREATEST(0, quantity - ?) WHERE id = ?", [neg.quantity, neg.crop_id]);
-
-            res.status(201).json({
-                success: true,
-                message: "Order successfully generated from negotiated agreement!",
-                order_id: orderResult.insertId,
-                total_amount: totalAmount
-            });
-        });
+        );
     });
 };
 
