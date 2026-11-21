@@ -19,6 +19,8 @@ router.post("/commitments/:id/cancel", cancelCommitment);
 
 // Campaign endpoints
 router.get("/", getCampaigns);
+router.get("/campaigns", getCampaigns);
+router.get("/campaigns/:id", getCampaignById);
 router.post("/", createCampaign);
 router.get("/:id", getCampaignById);
 router.post("/:id/join", joinCampaign);
