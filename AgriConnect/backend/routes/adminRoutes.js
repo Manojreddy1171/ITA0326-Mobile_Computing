@@ -30,6 +30,11 @@ router.get(
     getDashboardStats
 );
 
+router.get(
+    "/stats",
+    getDashboardStats
+);
+
 
 // =====================================================
 // GET ALL REGISTRATIONS

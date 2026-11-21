@@ -1,721 +1,1124 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>AgriConnect</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriConnect – Smart Agricultural Marketplace</title>
+    <link rel="stylesheet" href="assets/agri-navigation.css">
     <style>
-
-        /* =================================================
-           GENERAL
-           ================================================= */
+        :root {
+            --primary-green: #2E7D32;
+            --secondary-green: #66BB6A;
+            --bg-color: #F8FAF8;
+            --white: #FFFFFF;
+            --accent-orange: #FF9800;
+            --text-dark: #263238;
+            --text-muted: #546E7A;
+            --border-color: #E0E0E0;
+            --card-shadow: 0 4px 16px rgba(46, 125, 50, 0.08);
+            --transition: all 0.25s ease-in-out;
+        }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
         body {
-
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
             min-height: 100vh;
-
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
-            background-image:
-                linear-gradient(
-                    rgba(255, 255, 255, 0.15),
-                    rgba(255, 255, 255, 0.15)
-                ),
-                url("assets/agri-background.png");
-
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-
             display: flex;
             flex-direction: column;
-
         }
 
-
-        /* =================================================
-           MAIN CONTENT
-           ================================================= */
-
-        .main-container {
-
-            flex: 1;
-
-            padding:
-                20px 30px 25px;
-
+        /* ================= HEADER / NAVBAR ================= */
+        .site-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
         }
 
-
-        /* =================================================
-           LOGO
-           ================================================= */
-
-        .logo-section {
-
-            text-align: center;
-
-        }
-
-        .logo {
-
-            width: 440px;
-
-            max-width: 65%;
-
-            height: auto;
-
-        }
-
-
-        /* =================================================
-           PLATFORM DESCRIPTION
-           ================================================= */
-
-        .platform-name {
-
-            text-align: center;
-
-            margin-top: 5px;
-
-            font-size: 18px;
-
-            color: #111;
-
-        }
-
-
-        /* =================================================
-           WELCOME SECTION
-           ================================================= */
-
-        .welcome-section {
-
-            text-align: center;
-
-            margin-top: 25px;
-
-            margin-bottom: 25px;
-
-        }
-
-        .welcome-title {
-
-            font-size: 26px;
-
-            font-weight: normal;
-
-            color: #111;
-
-            margin-bottom: 10px;
-
-        }
-
-        .welcome-subtitle {
-
-            font-size: 20px;
-
-            color: #111;
-
-        }
-
-
-        /* =================================================
-           CONTENT AREA
-           ================================================= */
-
-        .content-area {
-
-            max-width: 1100px;
-
+        .header-container {
+            max-width: 1200px;
             margin: 0 auto;
-
+            padding: 12px 24px;
             display: flex;
-
             align-items: center;
-
-            justify-content: center;
-
-            gap: 40px;
-
+            justify-content: space-between;
         }
 
-
-        /* =================================================
-           DESCRIPTION
-           ================================================= */
-
-        .description-section {
-
-            flex: 1;
-
-            max-width: 450px;
-
-            text-align: center;
-
+        .logo-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--primary-green);
         }
 
-        .description {
+        .logo-brand img {
+            height: 44px;
+            width: auto;
+            object-fit: contain;
+        }
 
+        .logo-text {
             font-size: 22px;
-
-            line-height: 1.25;
-
-            color: #111;
-
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--primary-green);
         }
 
-
-        /* =================================================
-           LOGIN CARDS
-           ================================================= */
-
-        .login-section {
-
-            display: flex;
-
-            gap: 20px;
-
-            justify-content: center;
-
+        .logo-text span {
+            color: var(--accent-orange);
         }
 
-        .login-card {
-
-            width: 230px;
-
-            min-height: 315px;
-
-            background:
-                rgba(255, 255, 255, 0.95);
-
-            border-radius: 10px;
-
-            padding: 22px 18px;
-
+        .nav-links {
             display: flex;
-
-            flex-direction: column;
-
             align-items: center;
-
-            text-align: center;
-
-            box-shadow:
-                0 4px 12px
-                rgba(0, 0, 0, 0.12);
-
+            gap: 24px;
+            list-style: none;
         }
 
-
-        /* =================================================
-           LOGIN ICONS
-           ================================================= */
-
-        .login-icon {
-
-            width: 92px;
-
-            height: 92px;
-
-            border-radius: 50%;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            font-size: 45px;
-
-            margin-bottom: 15px;
-
-        }
-
-        .user-icon {
-
-            background: #e1f2e5;
-
-        }
-
-        .admin-icon {
-
-            background: #eee4ff;
-
-        }
-
-
-        /* =================================================
-           CARD TITLES
-           ================================================= */
-
-        .card-title {
-
-            font-size: 20px;
-
-            color: #111;
-
-            margin-bottom: 18px;
-
-        }
-
-
-        /* =================================================
-           CARD DESCRIPTION
-           ================================================= */
-
-        .card-description {
-
-            min-height: 48px;
-
-            font-size: 13px;
-
-            line-height: 1.35;
-
-            color: #333;
-
-            margin-bottom: 20px;
-
-        }
-
-
-        /* =================================================
-           CARD BUTTONS
-           ================================================= */
-
-        .login-button {
-
-            width: 100%;
-
-            padding: 10px;
-
-            border: none;
-
-            border-radius: 7px;
-
-            color: white;
-
-            font-size: 14px;
-
-            font-weight: bold;
-
+        .nav-links a {
             text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 15px;
+            transition: var(--transition);
+        }
 
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-green);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
             cursor: pointer;
-
-            margin-top: auto;
-
-            transition:
-                opacity 0.2s,
-                transform 0.1s;
-
+            transition: var(--transition);
+            border: none;
         }
 
-        .login-button:hover {
-
-            opacity: 0.88;
-
+        .btn-outline {
+            border: 1.5px solid var(--primary-green);
+            color: var(--primary-green);
+            background: transparent;
         }
 
-        .login-button:active {
-
-            transform: scale(0.98);
-
+        .btn-outline:hover {
+            background: rgba(46, 125, 50, 0.08);
         }
 
-        .user-button {
-
-            background: #2e9e42;
-
+        .btn-primary {
+            background: var(--primary-green);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
         }
 
-        .admin-button {
-
-            background: #641db8;
-
+        .btn-primary:hover {
+            background: #256628;
+            transform: translateY(-1px);
         }
 
-
-        /* =================================================
-           REGISTER LINK
-           ================================================= */
-
-        .register-section {
-
-            text-align: center;
-
-            margin-top: 10px;
-
-            font-size: 20px;
-
-            color: #111;
-
+        .btn-accent {
+            background: var(--accent-orange);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25);
         }
 
-        .register-section a {
-
-            color: #1262d6;
-
-            font-weight: bold;
-
-            text-decoration: none;
-
-            margin-left: 8px;
-
+        .btn-accent:hover {
+            background: #e68900;
+            transform: translateY(-1px);
         }
 
-        .register-section a:hover {
-
-            text-decoration: underline;
-
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 26px;
+            cursor: pointer;
+            color: var(--text-dark);
         }
 
+        /* ================= HERO SECTION ================= */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.05) 0%, rgba(102, 187, 106, 0.12) 100%), #FFFFFF;
+            padding: 70px 24px 60px;
+            border-bottom: 1px solid var(--border-color);
+        }
 
-        /* =================================================
-           FOOTER
-           ================================================= */
-
-        footer {
-
-            min-height: 45px;
-
-            background:
-                rgba(22, 91, 31, 0.96);
-
-            color: #ddd;
-
-            display: flex;
-
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 48px;
             align-items: center;
-
-            justify-content: center;
-
-            gap: 15px;
-
-            font-size: 12px;
-
         }
 
-        footer a {
+        .hero-content h1 {
+            font-size: 46px;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
 
-            color: #4f8edc;
+        .hero-content h1 span {
+            color: var(--primary-green);
+        }
 
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            font-weight: 500;
+        }
+
+        .hero-ctas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .stat-item h3 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary-green);
+        }
+
+        .stat-item p {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .hero-card-preview {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.12);
+            border: 1px solid rgba(46, 125, 50, 0.15);
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .badge-live {
+            background: #E8F5E9;
+            color: var(--primary-green);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-live::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--secondary-green);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .role-selector-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .role-box {
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
             text-decoration: none;
-
+            color: var(--text-dark);
+            transition: var(--transition);
+            background: var(--bg-color);
         }
 
-        footer a:hover {
-
-            text-decoration: underline;
-
+        .role-box:hover {
+            border-color: var(--primary-green);
+            background: #E8F5E9;
+            transform: translateY(-2px);
         }
 
-        .footer-divider {
-
-            color: #aaa;
-
+        .role-box-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
         }
 
+        .role-box-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--primary-green);
+        }
 
-        /* =================================================
-           RESPONSIVE DESIGN
-           ================================================= */
+        .role-box-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
 
-        @media (max-width: 950px) {
+        /* ================= 4 KEY FEATURES SECTION ================= */
+        .section-features {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-            .content-area {
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 50px;
+        }
 
+        .section-tag {
+            color: var(--primary-green);
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .section-desc {
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 28px 22px;
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--card-shadow);
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(46, 125, 50, 0.12);
+        }
+
+        .feature-icon-wrapper {
+            width: 58px;
+            height: 58px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 20px;
+            background: #E8F5E9;
+            color: var(--primary-green);
+        }
+
+        .feature-icon-wrapper.orange {
+            background: #FFF3E0;
+            color: var(--accent-orange);
+        }
+
+        .feature-icon-wrapper.blue {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .feature-icon-wrapper.purple {
+            background: #F3E5F5;
+            color: #7B1FA2;
+        }
+
+        .feature-card h3 {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            flex: 1;
+            margin-bottom: 18px;
+        }
+
+        .feature-link {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-green);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ================= FEATURED PRODUCTS SECTION ================= */
+        .section-products {
+            background: var(--white);
+            padding: 80px 24px;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .products-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .product-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--white);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            border-color: var(--primary-green);
+            box-shadow: var(--card-shadow);
+            transform: translateY(-3px);
+        }
+
+        .product-img-box {
+            height: 180px;
+            background: #F0F4F1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-img-box img {
+            transform: scale(1.04);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(38, 50, 56, 0.85);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .product-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .product-farmer {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .product-pricing {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .price-tag {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-green);
+        }
+
+        .price-unit {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .stock-tag {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .product-actions {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        /* ================= HOW IT WORKS SECTION ================= */
+        .section-workflow {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 40px;
+            position: relative;
+        }
+
+        .step-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            position: relative;
+        }
+
+        .step-number {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary-green);
+            color: var(--white);
+            font-size: 18px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .step-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .step-card p {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ================= FOOTER ================= */
+        .site-footer {
+            background: #1B5E20;
+            color: #E8F5E9;
+            padding: 60px 24px 24px;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 14px;
+        }
+
+        .footer-brand p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-col h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul a {
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .footer-col ul a:hover {
+            color: var(--white);
+            padding-left: 4px;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* ================= RESPONSIVE DESIGN ================= */
+        @media (max-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+            .nav-links {
+                display: none;
                 flex-direction: column;
-
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: var(--white);
+                padding: 20px;
+                border-bottom: 1px solid var(--border-color);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.08);
             }
-
-            .description-section {
-
-                max-width: 600px;
-
+            .nav-links.show {
+                display: flex;
             }
-
-        }
-
-
-        @media (max-width: 600px) {
-
-            .main-container {
-
-                padding:
-                    15px 15px 25px;
-
+            .hero-content h1 {
+                font-size: 34px;
             }
-
-            .logo {
-
-                max-width: 85%;
-
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
             }
-
-            .platform-name {
-
-                font-size: 15px;
-
+            .steps-grid {
+                grid-template-columns: 1fr;
             }
-
-            .welcome-title {
-
-                font-size: 23px;
-
+            .features-grid {
+                grid-template-columns: 1fr;
             }
-
-            .welcome-subtitle {
-
-                font-size: 17px;
-
+            .products-grid {
+                grid-template-columns: 1fr;
             }
-
-            .login-section {
-
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+            .footer-bottom {
                 flex-direction: column;
-
-                align-items: center;
-
+                gap: 12px;
+                text-align: center;
             }
-
-            .login-card {
-
-                width: 280px;
-
-            }
-
-            .description {
-
-                font-size: 18px;
-
-            }
-
-            .register-section {
-
-                font-size: 17px;
-
-            }
-
-            footer {
-
-                flex-wrap: wrap;
-
-                padding: 10px;
-
-            }
-
         }
-
     </style>
-
 </head>
-
-
 <body>
 
-
-    <!-- =================================================
-         MAIN CONTENT
-         ================================================= -->
-
-    <main class="main-container">
-
-
-        <!-- =================================================
-             AGRICONNECT LOGO
-             ================================================= -->
-
-        <section class="logo-section">
-
-            <img
-                src="assets/agriconnect-logo.png"
-                alt="AgriConnect Logo"
-                class="logo"
-            >
-
-            <p class="platform-name">
-                Smart Farmer Support &amp; Marketplace Platform
-            </p>
-
-        </section>
-
-
-        <!-- =================================================
-             WELCOME
-             ================================================= -->
-
-        <section class="welcome-section">
-
-            <h1 class="welcome-title">
-                Welcome!
-            </h1>
-
-            <p class="welcome-subtitle">
-                Choose How You Wanted to Enter The Platform
-            </p>
-
-        </section>
-
-
-        <!-- =================================================
-             CONTENT AREA
-             ================================================= -->
-
-        <section class="content-area">
-
-
-            <!-- =================================================
-                 PLATFORM DESCRIPTION
-                 ================================================= -->
-
-            <div class="description-section">
-
-                <p class="description">
-                    Connecting farmers, buyers,
-                    experts, and equipment
-                    providers to create a
-                    smarter, more efficient
-                    agricultural community.
-                </p>
-
-            </div>
-
-
-            <!-- =================================================
-                 LOGIN CARDS
-                 ================================================= -->
-
-            <div class="login-section">
-
-
-                <!-- =================================================
-                     USER LOGIN
-                     ================================================= -->
-
-                <div class="login-card">
-
-                    <div class="login-icon user-icon">
-                        👥
-                    </div>
-
-                    <h2 class="card-title">
-                        User Login
-                    </h2>
-
-                    <p class="card-description">
-                        Farmers, Buyers, Agricultural
-                        Experts and Equipment Providers
-                    </p>
-
-                    <a
-                        href="select-role.html"
-                        class="login-button user-button"
-                    >
-                        Continue To User Login
-                    </a>
-
-                </div>
-
-
-                <!-- =================================================
-                     ADMIN LOGIN
-                     ================================================= -->
-
-                <div class="login-card">
-
-                    <div class="login-icon admin-icon">
-                        🔐
-                    </div>
-
-                    <h2 class="card-title">
-                        Administrator Login
-                    </h2>
-
-                    <p class="card-description">
-                        Secure Access for System
-                        Administrators Only
-                    </p>
-
-                    <a
-                        href="admin-login.html"
-                        class="login-button admin-button"
-                    >
-                        Admin Login
-                    </a>
-
-                </div>
-
-
-            </div>
-
-
-        </section>
-
-
-        <!-- =================================================
-             REGISTER
-             ================================================= -->
-
-        <div class="register-section">
-
-            New to AgriConnect?
-
-            <a href="register.html">
-                Register
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+        <div class="header-container">
+            <a href="index.html" class="logo-brand">
+                <img src="assets/agriconnect-logo.png" alt="AgriConnect Logo" onerror="this.onerror=null; this.src='assets/agriconnect-logo-white.png';">
+                <span class="logo-text">Agri<span>Connect</span></span>
             </a>
 
+            <nav>
+                <ul class="nav-links" id="primaryNav">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="marketplace.html">Marketplace</a></li>
+                    <li><a href="equipment-rental.html">Equipment Rentals</a></li>
+                    <li><a href="group-buying.html">Group Buying</a></li>
+                    <li><a href="wholesale-negotiations.html">Price Negotiator</a></li>
+                    <li><a href="#aboutSection">About</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <a href="login.html" class="btn btn-outline" id="navLoginBtn">Login</a>
+                <a href="register.html" class="btn btn-primary" id="navRegisterBtn">Register</a>
+                <button class="mobile-toggle" id="mobileNavToggle" aria-label="Toggle navigation">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= HERO SECTION ================= -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Connecting Farmers <span>Directly</span> with Buyers</h1>
+                <p class="hero-subtitle">Buy, Sell, Negotiate and Grow Together.</p>
+                
+                <div class="hero-ctas">
+                    <a href="marketplace.html" class="btn btn-primary" style="padding:14px 28px; font-size:16px;">🌾 Explore Marketplace</a>
+                    <a href="login.html" class="btn btn-accent" style="padding:14px 28px; font-size:16px;">👨‍🌾 Start Selling</a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <h3 id="heroFarmerCount">500+</h3>
+                        <p>Verified Farmers</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 id="heroListingCount">1,200+</h3>
+                        <p>Crop Listings</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 id="heroDiscountRate">₹0</h3>
+                        <p>Middleman Commissions</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fast Role Access Card -->
+            <div class="hero-card-preview">
+                <div class="preview-header">
+                    <div>
+                        <h3 style="font-size:18px; font-weight:700;">Fast Role Access</h3>
+                        <p style="font-size:13px; color:var(--text-muted);">Choose your portal to enter</p>
+                    </div>
+                    <span class="badge-live">Live Marketplace</span>
+                </div>
+
+                <div class="role-selector-grid">
+                    <a href="farmer-dashboard.html" class="role-box">
+                        <div class="role-box-icon">👨‍🌾</div>
+                        <div class="role-box-title">Farmer Portal</div>
+                        <div class="role-box-desc">List crops & negotiate</div>
+                    </a>
+                    <a href="buyer-dashboard.html" class="role-box">
+                        <div class="role-box-icon">🛒</div>
+                        <div class="role-box-title">Buyer Portal</div>
+                        <div class="role-box-desc">Buy & pool demands</div>
+                    </a>
+                    <a href="equipment-rental.html" class="role-box">
+                        <div class="role-box-icon">🚜</div>
+                        <div class="role-box-title">Equipment</div>
+                        <div class="role-box-desc">Rent tractors & tools</div>
+                    </a>
+                    <a href="admin-login.html" class="role-box">
+                        <div class="role-box-icon">⚙️</div>
+                        <div class="role-box-title">Admin Portal</div>
+                        <div class="role-box-desc">Platform governance</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= 4 KEY FEATURES SECTION ================= -->
+    <section class="section-features">
+        <div class="section-header">
+            <div class="section-tag">Empowering Agriculture</div>
+            <h2 class="section-title">Built for Modern Agriculture</h2>
+            <p class="section-desc">Four specialized smart modules designed to maximize agricultural income and deliver fair prices directly from farm to table.</p>
         </div>
 
+        <div class="features-grid">
+            <!-- 1. Buy & Sell Crops -->
+            <a href="marketplace.html" class="feature-card">
+                <div class="feature-icon-wrapper">🌱</div>
+                <h3>1. Buy & Sell Crops</h3>
+                <p>Browse fresh farm harvest directly from verified growers without any middlemen markups or delayed payments.</p>
+                <div class="feature-link">View Marketplace →</div>
+            </a>
 
-    </main>
+            <!-- 2. Smart Price Negotiation -->
+            <a href="wholesale-negotiations.html" class="feature-card">
+                <div class="feature-icon-wrapper orange">🤝</div>
+                <h3>2. Smart Price Negotiation</h3>
+                <p>Transparent bilateral bargaining with instant rule-based counteroffer suggestions for bulk wholesale quantities.</p>
+                <div class="feature-link">Start Negotiating →</div>
+            </a>
 
+            <!-- 3. Group Buying -->
+            <a href="group-buying.html" class="feature-card">
+                <div class="feature-icon-wrapper blue">👥</div>
+                <h3>3. Group Buying</h3>
+                <p>Pool purchasing demand with neighboring buyers to reach minimum thresholds (e.g., 500 kg) and unlock wholesale bulk discounts.</p>
+                <div class="feature-link">Join Campaigns →</div>
+            </a>
 
-    <!-- =================================================
-         FOOTER
-         ================================================= -->
+            <!-- 4. Equipment Rentals -->
+            <a href="equipment-rental.html" class="feature-card">
+                <div class="feature-icon-wrapper purple">🚜</div>
+                <h3>4. Equipment Rentals</h3>
+                <p>Lease tractors, harvesters, rotavators, and irrigation pumps on flexible daily or seasonal schedules.</p>
+                <div class="feature-link">Rent Machinery →</div>
+            </a>
+        </div>
+    </section>
 
-    <footer>
+    <!-- ================= FEATURED PRODUCTS SECTION ================= -->
+    <section class="section-products">
+        <div class="products-container">
+            <div class="section-header" style="margin-bottom: 24px;">
+                <div class="section-tag">Fresh From The Field</div>
+                <h2 class="section-title">Featured Crops Available Now</h2>
+                <p class="section-desc">Inspected produce ready for immediate dispatch and wholesale bulk reservation.</p>
+            </div>
 
-        <span>
-            © 2026 AgriConnect: All Rights Served
-        </span>
+            <div class="products-grid" id="featuredProductsGrid">
+                <!-- Dynamically loaded from /api/crops with realistic fallback -->
+                <div class="product-card">
+                    <div class="product-img-box">
+                        <img src="uploads/demo_tomato_primary.png" onerror="this.onerror=null; this.src='assets/agri-background.png';" alt="Tomatoes">
+                        <span class="product-badge">Vegetables</span>
+                    </div>
+                    <div class="product-body">
+                        <h4 class="product-title">Fresh Organic Tomatoes</h4>
+                        <div class="product-farmer">Farmer Ramesh · Coimbatore</div>
+                        <div class="product-pricing">
+                            <span class="price-tag">₹50 <span class="price-unit">/ kg</span></span>
+                            <span class="stock-tag">500 kg left</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="marketplace.html" class="btn btn-outline btn-sm">View Details</a>
+                            <a href="wholesale-negotiations.html?crop_id=2" class="btn btn-primary btn-sm">Negotiate</a>
+                        </div>
+                    </div>
+                </div>
 
-        <span class="footer-divider">
-            |
-        </span>
+                <div class="product-card">
+                    <div class="product-img-box">
+                        <img src="uploads/demo_onion.png" onerror="this.onerror=null; this.src='assets/agri-background.png';" alt="Red Onions">
+                        <span class="product-badge">Vegetables</span>
+                    </div>
+                    <div class="product-body">
+                        <h4 class="product-title">Premium Red Onions</h4>
+                        <div class="product-farmer">Farmer Ravi · Kurnool</div>
+                        <div class="product-pricing">
+                            <span class="price-tag">₹35 <span class="price-unit">/ kg</span></span>
+                            <span class="stock-tag">800 kg left</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="marketplace.html" class="btn btn-outline btn-sm">View Details</a>
+                            <a href="wholesale-negotiations.html" class="btn btn-primary btn-sm">Negotiate</a>
+                        </div>
+                    </div>
+                </div>
 
-        <a href="#">
-            Privacy Policy
-        </a>
+                <div class="product-card">
+                    <div class="product-img-box">
+                        <img src="uploads/demo_rice.png" onerror="this.onerror=null; this.src='assets/agri-background.png';" alt="Sona Masoori Rice">
+                        <span class="product-badge">Grains</span>
+                    </div>
+                    <div class="product-body">
+                        <h4 class="product-title">Sona Masoori Rice</h4>
+                        <div class="product-farmer">Farmer Suresh · Mandya</div>
+                        <div class="product-pricing">
+                            <span class="price-tag">₹58 <span class="price-unit">/ kg</span></span>
+                            <span class="stock-tag">1,200 kg left</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="marketplace.html" class="btn btn-outline btn-sm">View Details</a>
+                            <a href="group-buying.html" class="btn btn-accent btn-sm">Pool Buy</a>
+                        </div>
+                    </div>
+                </div>
 
-        <span class="footer-divider">
-            |
-        </span>
+                <div class="product-card">
+                    <div class="product-img-box">
+                        <img src="uploads/demo_potato.png" onerror="this.onerror=null; this.src='assets/agri-background.png';" alt="Potatoes">
+                        <span class="product-badge">Vegetables</span>
+                    </div>
+                    <div class="product-body">
+                        <h4 class="product-title">Farm Fresh Potatoes</h4>
+                        <div class="product-farmer">Farmer Kumar · Hassan</div>
+                        <div class="product-pricing">
+                            <span class="price-tag">₹28 <span class="price-unit">/ kg</span></span>
+                            <span class="stock-tag">650 kg left</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="marketplace.html" class="btn btn-outline btn-sm">View Details</a>
+                            <a href="wholesale-negotiations.html" class="btn btn-primary btn-sm">Negotiate</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <a href="#">
-            Terms of Service
-        </a>
+            <div style="text-align:center; margin-top:36px;">
+                <a href="marketplace.html" class="btn btn-outline" style="padding:12px 30px;">Explore Full Marketplace Catalog →</a>
+            </div>
+        </div>
+    </section>
 
+    <!-- ================= HOW IT WORKS SECTION ================= -->
+    <section class="section-workflow" id="aboutSection">
+        <div class="section-header">
+            <div class="section-tag">Simple & Transparent</div>
+            <h2 class="section-title">How AgriConnect Works</h2>
+            <p class="section-desc">Three straightforward steps to trade produce and lease machinery without hidden hurdles.</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Connect & Discover</h3>
+                <p>Farmers list their crops and machinery with high-definition multi-angle photos. Buyers browse local harvest with verified quality details.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Negotiate or Pool</h3>
+                <p>Negotiate wholesale prices digitally with intelligent counteroffer advice, or pool your order with fellow buyers to unlock volume discounts.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Direct Delivery & Settlement</h3>
+                <p>Orders are confirmed transparently, dispatched straight from the grower's farm, and tracked until final receipt.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h2>AgriConnect</h2>
+                <p>AgriConnect is an open digital ecosystem empowering farmers, wholesale buyers, agronomists, and equipment owners to cooperate directly for sustainable rural development.</p>
+                <div style="font-size:13px; color:rgba(255,255,255,0.8);">
+                    📍 College Final Year Project & Technical Showcase<br>
+                    ⚡ Powered by Node.js, Express & MySQL
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Marketplace</h4>
+                <ul>
+                    <li><a href="marketplace.html">Browse Crops</a></li>
+                    <li><a href="wholesale-negotiations.html">Smart Price Negotiator</a></li>
+                    <li><a href="group-buying.html">Demand Pooling Campaigns</a></li>
+                    <li><a href="equipment-rental.html">Equipment Leasing</a></li>
+                    <li><a href="image-upload-studio.html">Image Upload Studio</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Portals</h4>
+                <ul>
+                    <li><a href="farmer-dashboard.html">Farmer Portal</a></li>
+                    <li><a href="buyer-dashboard.html">Wholesale Buyer Portal</a></li>
+                    <li><a href="expert-dashboard.html">Agronomy Expert Portal</a></li>
+                    <li><a href="admin-login.html">System Administrator</a></li>
+                    <li><a href="help-support.html">Help & FAQs</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact & Legal</h4>
+                <ul>
+                    <li><a href="help-support.html">Contact Support</a></li>
+                    <li><a href="help-support.html">Privacy Policy</a></li>
+                    <li><a href="help-support.html">Terms of Service</a></li>
+                    <li><a href="help-support.html">Dispute Resolution</a></li>
+                    <li><a href="login.html">Account Sign In</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>© 2026 AgriConnect. Smart Agricultural Marketplace. All Rights Reserved.</div>
+            <div>Built for High Reliability & Zero-Latency Mobile Operations</div>
+        </div>
     </footer>
 
+    <!-- ================= DYNAMIC LOGIC ================= -->
+    <script>
+        // Mobile navigation toggle
+        const toggleBtn = document.getElementById("mobileNavToggle");
+        const navMenu = document.getElementById("primaryNav");
+        if (toggleBtn && navMenu) {
+            toggleBtn.addEventListener("click", () => {
+                navMenu.classList.toggle("show");
+            });
+        }
 
+        // Check active session
+        try {
+            const rawUser = sessionStorage.getItem("user");
+            if (rawUser) {
+                const user = JSON.parse(rawUser);
+                const role = sessionStorage.getItem("selectedRole") || "farmer";
+                const loginBtn = document.getElementById("navLoginBtn");
+                const registerBtn = document.getElementById("navRegisterBtn");
+                if (loginBtn) {
+                    loginBtn.textContent = (user.first_name || "My") + "'s Portal";
+                    loginBtn.href = role === "farmer" ? "farmer-dashboard.html" :
+                                    role === "buyer" ? "buyer-dashboard.html" :
+                                    role === "admin" ? "admin-dashboard.html" : "marketplace.html";
+                }
+                if (registerBtn) {
+                    registerBtn.textContent = "Log Out";
+                    registerBtn.className = "btn btn-outline";
+                    registerBtn.href = "#";
+                    registerBtn.onclick = (e) => {
+                        e.preventDefault();
+                        sessionStorage.clear();
+                        window.location.reload();
+                    };
+                }
+            }
+        } catch (e) {
+            console.error("Session check error", e);
+        }
+
+        // Fetch live crops from /api/crops
+        async function loadFeaturedCrops() {
+            try {
+                const res = await fetch("/api/crops");
+                if (!res.ok) return;
+                const data = await res.json();
+                const crops = Array.isArray(data) ? data : (data.crops || []);
+                if (crops.length === 0) return;
+
+                const grid = document.getElementById("featuredProductsGrid");
+                if (!grid) return;
+
+                // Take first 4 crops
+                const slice = crops.slice(0, 4);
+                grid.innerHTML = slice.map(c => `
+                    <div class="product-card">
+                        <div class="product-img-box">
+                            <img src="${c.primary_image || (c.image_url ? (c.image_url.startsWith('http') ? c.image_url : '/uploads/' + c.image_url) : 'uploads/demo_tomato_primary.png')}"
+                                 onerror="this.onerror=null; this.src='assets/agri-background.png';"
+                                 alt="${c.name || c.crop_name}">
+                            <span class="product-badge">${c.category || 'Agricultural'}</span>
+                        </div>
+                        <div class="product-body">
+                            <h4 class="product-title">${c.name || c.crop_name}</h4>
+                            <div class="product-farmer">Farmer ${c.farmer_name || 'Partner'} · ${c.district || c.location || 'Local Farm'}</div>
+                            <div class="product-pricing">
+                                <span class="price-tag">₹${c.price_per_unit || c.price || 40} <span class="price-unit">/ ${c.unit || 'kg'}</span></span>
+                                <span class="stock-tag">${c.quantity || 100} ${c.unit || 'kg'} available</span>
+                            </div>
+                            <div class="product-actions">
+                                <a href="marketplace.html" class="btn btn-outline btn-sm">View Details</a>
+                                <a href="wholesale-negotiations.html?crop_id=${c.id}" class="btn btn-primary btn-sm">Negotiate</a>
+                            </div>
+                        </div>
+                    </div>
+                `).join("");
+            } catch (err) {
+                console.log("Using cached demo featured crops");
+            }
+        }
+        loadFeaturedCrops();
+    </script>
 </body>
-
 </html>

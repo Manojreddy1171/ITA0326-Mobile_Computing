@@ -1280,6 +1280,114 @@ td {
 
             </div>
 
+
+            <!-- Crop Listings -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon stat-green">
+                    🌱
+                </div>
+
+                <div>
+
+                    <span class="stat-title">
+                        Active Listings
+                    </span>
+
+                    <span class="stat-value" id="statListings">
+                        -
+                    </span>
+
+                    <span class="stat-change" id="statListingsChange">
+                        In Marketplace
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Total Orders -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon stat-blue">
+                    📦
+                </div>
+
+                <div>
+
+                    <span class="stat-title">
+                        Total Orders
+                    </span>
+
+                    <span class="stat-value" id="statOrders">
+                        -
+                    </span>
+
+                    <span class="stat-change" id="statOrdersChange">
+                        Platform-wide
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Active Negotiations -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon stat-orange">
+                    🤝
+                </div>
+
+                <div>
+
+                    <span class="stat-title">
+                        Negotiations
+                    </span>
+
+                    <span class="stat-value" id="statNegotiations">
+                        -
+                    </span>
+
+                    <span class="stat-change" id="statNegotiationsChange">
+                        Bilateral Wholesale
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Group Campaigns -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon stat-purple">
+                    👥
+                </div>
+
+                <div>
+
+                    <span class="stat-title">
+                        Group Campaigns
+                    </span>
+
+                    <span class="stat-value" id="statCampaigns">
+                        -
+                    </span>
+
+                    <span class="stat-change" id="statCampaignsChange">
+                        Demand Pooling
+                    </span>
+
+                </div>
+
+            </div>
+
         </div>
 
 
@@ -2271,6 +2379,11 @@ async function loadDashboard() {
                 ? `↓ ${s.resolvedConflictsThisWeek} resolved this week`
                 : "0 resolved this week"
         );
+
+        setText("statListings", Number(s.totalListings != null ? s.totalListings : 0).toLocaleString());
+        setText("statOrders", Number(s.totalOrders != null ? s.totalOrders : 0).toLocaleString());
+        setText("statNegotiations", Number(s.activeNegotiations != null ? s.activeNegotiations : 0).toLocaleString());
+        setText("statCampaigns", Number(s.groupCampaigns != null ? s.groupCampaigns : 0).toLocaleString());
 
 
         // ---- Users by role donut ----

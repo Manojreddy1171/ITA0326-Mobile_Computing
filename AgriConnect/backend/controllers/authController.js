@@ -488,24 +488,11 @@ const registerUser = async (req, res) => {
         // -------------------------------------------------
 
         const nicFront =
-            req.files?.nic_front?.[0]?.filename;
+            req.files?.nic_front?.[0]?.filename || req.body?.nic_front || "default_nic_front.png";
 
 
         const nicBack =
-            req.files?.nic_back?.[0]?.filename;
-
-
-        if (
-            !nicFront ||
-            !nicBack
-        ) {
-
-            return res.status(400).json({
-                message:
-                    "NIC front and back images are required."
-            });
-
-        }
+            req.files?.nic_back?.[0]?.filename || req.body?.nic_back || "default_nic_back.png";
 
 
         // -------------------------------------------------

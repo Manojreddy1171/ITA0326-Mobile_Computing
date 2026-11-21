@@ -1515,6 +1515,32 @@ exports.getDashboardStats = async (req, res) => {
                AND resolved_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)`
         );
 
+        // ---- 4b. Marketplace KPIs: Listings, Orders, Negotiations, Group Campaigns ----
+        let totalListings = 0;
+        let totalOrders = 0;
+        let activeNegotiations = 0;
+        let groupCampaigns = 0;
+
+        try {
+            const [[lRow]] = await db.promise().query("SELECT COUNT(*) AS count FROM crops WHERE quantity > 0");
+            if (lRow) totalListings = lRow.count;
+        } catch (e) {}
+
+        try {
+            const [[oRow]] = await db.promise().query("SELECT COUNT(*) AS count FROM orders");
+            if (oRow) totalOrders = oRow.count;
+        } catch (e) {}
+
+        try {
+            const [[nRow]] = await db.promise().query("SELECT COUNT(*) AS count FROM negotiations WHERE status IN ('pending', 'countered', 'accepted')");
+            if (nRow) activeNegotiations = nRow.count;
+        } catch (e) {}
+
+        try {
+            const [[gRow]] = await db.promise().query("SELECT COUNT(*) AS count FROM group_buying_campaigns WHERE status IN ('active', 'target_reached')");
+            if (gRow) groupCampaigns = gRow.count;
+        } catch (e) {}
+
         // ---- 5. Growth chart - weekly new-user counts per role, for the selected period ----
         const [weeklyRows] = await db.promise().query(
             `SELECT
@@ -1649,7 +1675,11 @@ exports.getDashboardStats = async (req, res) => {
                 providers: roleCountMap.equipment_provider || 0,
                 newProvidersThisWeek: newThisWeekMap.equipment_provider || 0,
                 activeConflicts: activeConflictsRow.count,
-                resolvedConflictsThisWeek: resolvedThisWeekRow.count
+                resolvedConflictsThisWeek: resolvedThisWeekRow.count,
+                totalListings,
+                totalOrders,
+                activeNegotiations,
+                groupCampaigns
             },
 
             usersByRole,

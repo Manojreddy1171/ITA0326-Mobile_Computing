@@ -1,109 +1,124 @@
-# AgriConnect
+# AgriConnect – Smart Agricultural Marketplace
 
-AgriConnect is a web platform that connects **farmers, buyers, agricultural experts and equipment providers** in one place, with an **administrator panel** for managing users, registrations, reports and conflicts.
+AgriConnect is an enterprise-grade full-stack digital marketplace connecting **farmers, wholesale buyers, agricultural experts, and equipment providers** on a transparent, real-time trading platform.
 
-It was built as a Human-Computer Interaction (HCI) focused project, with attention to usability, consistency, feedback, error prevention, accessibility and efficiency.
+Built for both modern desktop and mobile browsers—with full **Android Studio WebView integration**—AgriConnect eliminates exploitative intermediaries, enables digital wholesale bargaining, pools collective buyer demand, and delivers verified farm machinery leasing.
 
-## Roles and features
+---
 
-| Role | What they can do |
-|------|------------------|
-| **Farmer** | List and manage crops, view and process orders, book expert consultations, rent equipment, use the activity calendar, report issues |
-| **Buyer** | Browse the marketplace, search crops by text or image, place and track orders (pending, confirmed, delivered), message farmers |
-| **Agricultural expert** | Handle consultations, chat with farmers, access curated resources matched to their specialization |
-| **Equipment provider** | Manage equipment listings and quantities, handle rental requests, view rental history |
-| **Administrator** | Approve or reject registrations, manage users (including conduct scores and activation), resolve conflicts, review reports, send system notifications |
+## 🌟 Advanced Marketplace Modules
 
-Common to all roles: notifications, messaging, history, help and support, settings (including profile picture) and a confirmation prompt before logging out. A user with more than one role can switch between them.
+AgriConnect includes three specialized agricultural marketplace modules:
 
-## Tech stack
+1. **Smart Wholesale Price Negotiator (`wholesale-negotiations.html`)**
+   - Direct bilateral bargaining between farmers and wholesale buyers.
+   - Transparent rule-based recommendation engine factoring asking price, offered price, volume thresholds, and farmer floor prices.
+   - Comprehensive negotiation timeline log with instant one-click conversion to confirmed marketplace orders.
 
-- **Backend:** Node.js, Express
-- **Database:** MySQL / MariaDB (`mysql2`)
-- **Frontend:** HTML, CSS and vanilla JavaScript
-- **Other:** `multer` (file uploads), `bcrypt` (password hashing), `jsonwebtoken` (login tokens), `jimp` (image search), `dotenv` (configuration)
+2. **Camera & Multi-Angle Image Upload Studio (`image-upload-studio.html`)**
+   - Direct device camera capture (`capture="environment"`) and local photo gallery picker.
+   - Multi-photo uploads (up to 5 images, max 5MB each) with instant thumbnail preview.
+   - Dedicated primary cover manager to designate the main marketplace listing thumbnail.
 
-## Project structure
+3. **Smart Group Buying & Demand Pooling (`group-buying.html`)**
+   - Collective wholesale order pooling enabling buyers to join forces and unlock bulk discount pricing.
+   - Dynamic pooling progress bar reaching automated transition to `target_reached` (e.g. 500 kg threshold).
+   - Atomic transaction tracking preventing overselling and double counting.
 
-```
-AgriConnect/
-├── backend/
-│   ├── controllers/     # Request handling and business logic
-│   ├── routes/          # API routes
-│   ├── db.js            # MySQL connection (reads from .env)
-│   └── server.js        # Express server entry point
-├── database/            # SQL scripts (schema, migrations, seed data)
-├── frontend/            # HTML pages and assets
-├── uploads/             # User uploads (not tracked in Git)
-├── .env.example         # Template for environment variables
-└── package.json
-```
+4. **Universal Responsive Drawer Navigation**
+   - Seamless responsive experience across all screen sizes (320px to 1920px).
+   - Sliding mobile drawer with dimmed blurred backdrop overlay (`#sidebarOverlay`) and zero sidebar-content overlapping.
+   - Pinned 260px desktop sidebar with clean main content offset.
 
-## Getting started
+---
+
+## 👥 Supported Roles & Dashboards
+
+| Role | Access URL | Core Capabilities |
+|---|---|---|
+| **Farmer** | `/farmer-dashboard.html` | Manage crops, upload camera images, review incoming orders, negotiate wholesale prices, track group campaigns |
+| **Wholesale Buyer** | `/buyer-dashboard.html` | Browse marketplace, place orders, negotiate price per kg, join group-buying pools |
+| **Machinery Provider**| `/equipment-rental.html` | List tractors, harvesters, rotavators, water pumps; manage seasonal bookings |
+| **Agronomist Expert**| `/expert-dashboard.html` | Provide soil, pest, and crop advisory consultations to local farmers |
+| **Administrator** | `/admin-dashboard.html` | Monitor live platform KPIs, approve user registrations, resolve disputes and complaints |
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or newer recommended)
-- MySQL or MariaDB
+- **Node.js** (v18 or newer)
+- **MySQL / MariaDB** (v8.0+, standard port 3306 or 3307)
+- **Android Studio** (Optional, for native Android app build)
 
-### 1. Clone and install
+### 1. Installation
 ```bash
 git clone https://github.com/Kilshan2801/AgriConnect.git
 cd AgriConnect
 npm install
 ```
 
-### 2. Set up the database
-Create a database named `agriconnect`, then run the scripts in the `database/` folder. Run `schema.sql` first, then the others:
-
-```bash
-mysql -u root -p -P 3307 agriconnect < database/schema.sql
-```
-
-Then run the remaining scripts as needed (migrations such as `add_*.sql` and `fix_*.sql`, `resources_seed.sql` for the sample resources, and `create_admin_account.sql` for the administrator account).
-
-### 3. Configure environment variables
-Copy `.env.example` to `.env` and fill in your values:
-
-```
+### 2. Environment Configuration
+Create or verify `.env` in the root folder:
+```ini
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=your_mysql_password
 DB_NAME=agriconnect
-DB_PORT=3307
+DB_PORT=3306
+PORT=5000
 ADMIN_EMAIL=admin@agriconnect.com
-ADMIN_PASSWORD=your_admin_password
-JWT_SECRET=a_long_random_string
+ADMIN_PASSWORD=admin123
+JWT_SECRET=super_secret_jwt_key_agriconnect_2026
 ```
 
-Generate a random `JWT_SECRET` with:
+### 3. Database Initialization & Demo Seeding
+Run the automated migration and seed scripts:
 ```bash
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+# Initialize schema and seed demonstration accounts
+node scripts/init_and_seed.js
+node scripts/migrate_modules.js
+node scripts/seed_advanced_modules_demo.js
+node scripts/seed_college_demo.js
 ```
 
-> The `.env` file contains secrets and is excluded from Git. Never commit it.
-> If your password contains `#`, wrap the value in double quotes.
-
-### 4. Create the uploads folder
-```bash
-mkdir uploads
-```
-
-### 5. Run the server
+### 4. Start the Application Server
 ```bash
 npm start
+# or
+node backend/server.js
 ```
+The server will start listening at:
+- Web: `http://localhost:5000`
+- Android Emulator: `http://10.0.2.2:5000`
 
-Open **http://localhost:5000** in your browser.
+### 5. Run the Automated End-to-End Test Suite
+Verify all 10 core workflows across authentication, product listings, checkout, negotiation, image studio, group pooling, equipment rentals, admin metrics, and persistence:
+```bash
+node scripts/test_e2e_all.js
+```
+Expected result: **14 / 14 PASSED (100%)**.
 
-## Administrator login
+---
 
-The administrator signs in at `/admin-login.html` with the `ADMIN_EMAIL` and `ADMIN_PASSWORD` set in `.env`. The password is verified on the server and is not stored in the frontend.
+## 📱 Pre-Seeded Demonstration Accounts
 
-## Notes
+All demo accounts use password `password123`:
 
-- The default MySQL port in this project is **3307**. Change `DB_PORT` in `.env` if yours is different (the MySQL default is 3306).
-- Uploaded files (profile pictures, crop images, ID photos) are stored in `uploads/` and are intentionally not committed.
+- **Farmer (Lead):** `farmer@agriconnect.com` (Ramesh Kumar, Tamil Nadu)
+- **Farmer (Crops):** `ravi.farmer@agriconnect.com` (Ravi Teja, Andhra Pradesh)
+- **Farmer (Grains):** `suresh.farmer@agriconnect.com` (Suresh Gowda, Karnataka)
+- **Wholesale Buyer:** `buyer@agriconnect.com` (Wholesale Hub)
+- **Equipment Provider:** `equipment@agriconnect.com` (Machinery Leasing)
+- **Agricultural Expert:** `expert@agriconnect.com` (Senior Agronomist)
+- **System Administrator:** `admin@agriconnect.com` / `admin123`
 
-## Author
+---
 
-Developed by [Kilshan2801](https://github.com/Kilshan2801).
+## 📸 QA Screenshots & Audit Reports
+
+Comprehensive visual before-and-after audit logs and screenshots are available at:
+- `PROJECT_AUDIT.md` – Full architectural and route analysis.
+- `FINAL_IMPLEMENTATION_REPORT.md` – End-to-end deliverables and test summary.
+- `qa/UI_AUDIT_REPORT.md` – Responsive breakpoint analysis across 320px–1920px.
+- `qa/screenshots/after/` – Visual screenshots of all pages on mobile, tablet, and desktop.

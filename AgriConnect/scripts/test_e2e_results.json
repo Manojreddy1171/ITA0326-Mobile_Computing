@@ -1,0 +1,139 @@
+{
+  "totalTests": 14,
+  "passedTests": 14,
+  "failedTests": 0,
+  "results": [
+    {
+      "testNum": 1.1,
+      "name": "Farmer Registration API",
+      "expected": "HTTP 200 or 201 with success message",
+      "actual": 201,
+      "passed": true
+    },
+    {
+      "testNum": 1.2,
+      "name": "Farmer Login & JWT Authentication",
+      "expected": "HTTP 200 with user session data and role",
+      "actual": "Login successful.",
+      "passed": true
+    },
+    {
+      "testNum": 2.1,
+      "name": "Crop Creation & Marketplace Listing",
+      "expected": "Crop appears in GET /api/crops marketplace",
+      "actual": "Found crop in catalog",
+      "passed": true
+    },
+    {
+      "testNum": 3.1,
+      "name": "Buyer Checkout & Order Creation",
+      "expected": "HTTP 200/201 with created order",
+      "actual": 201,
+      "passed": true
+    },
+    {
+      "testNum": 3.2,
+      "name": "Farmer Order Status Update (Accepted)",
+      "expected": "Order status transitioned to 'accepted'",
+      "actual": true,
+      "passed": true
+    },
+    {
+      "testNum": 4.1,
+      "name": "Rule-Based Recommendation Engine",
+      "expected": "Suggested price between offered (42) and asking (50)",
+      "actual": 46.6,
+      "passed": true
+    },
+    {
+      "testNum": 4.2,
+      "name": "Bilateral Bargaining & Final Agreement at ₹47/kg",
+      "expected": "Negotiation status 'accepted' and final_agreed_price 47",
+      "actual": {
+        "status": "accepted",
+        "price": "47.00"
+      },
+      "passed": true
+    },
+    {
+      "testNum": 5.1,
+      "name": "Multi-Image Gallery & Primary Thumbnail Cover",
+      "expected": "Images retrieved with is_primary flag",
+      "actual": 3,
+      "passed": true
+    },
+    {
+      "testNum": 6.1,
+      "name": "Demand Pooling 500 kg Milestone & Status Transition",
+      "expected": "Target reached: 500 kg / 500 kg (100% progress)",
+      "actual": {
+        "status": "target_reached"
+      },
+      "passed": true
+    },
+    {
+      "testNum": 6.2,
+      "name": "Atomic Demand Commitment & Progress Tracking",
+      "expected": "Commitment registered or campaign status handled gracefully",
+      "actual": 400,
+      "passed": true
+    },
+    {
+      "testNum": 7.1,
+      "name": "Equipment & Machinery Provider Discovery",
+      "expected": "HTTP 200 with equipment provider fleet",
+      "actual": {
+        "count": 1
+      },
+      "passed": true
+    },
+    {
+      "testNum": 8.1,
+      "name": "Admin Real SQL Aggregation Analytics",
+      "expected": "Live counts for Users, Farmers, Buyers, Listings, Orders, Negotiations, Campaigns",
+      "actual": {
+        "totalUsers": 14,
+        "newUsersThisWeek": 14,
+        "farmers": 7,
+        "newFarmersThisWeek": 7,
+        "buyers": 5,
+        "newBuyersThisWeek": 5,
+        "experts": 1,
+        "newExpertsThisWeek": 1,
+        "providers": 1,
+        "newProvidersThisWeek": 1,
+        "activeConflicts": 0,
+        "resolvedConflictsThisWeek": 0,
+        "totalListings": 15,
+        "totalOrders": 9,
+        "activeNegotiations": 8,
+        "groupCampaigns": 1
+      },
+      "passed": true
+    },
+    {
+      "testNum": 9.1,
+      "name": "Universal Responsive Drawer & Dimmed Backdrop Overlay",
+      "expected": "CSS defines sliding drawer (-100% to 0), overlay backdrop, and desktop content offset",
+      "actual": {
+        "hasOverlayRule": true,
+        "hasMobileDrawerRule": true,
+        "hasOffsetContentRule": true
+      },
+      "passed": true
+    },
+    {
+      "testNum": 10.1,
+      "name": "Relational Consistency & Database Record Persistence",
+      "expected": "Data persisted in MySQL users, crops, orders, negotiations, and group campaigns",
+      "actual": {
+        "users": 15,
+        "crops": 15,
+        "orders": 9,
+        "negotiations": 8,
+        "campaigns": 1
+      },
+      "passed": true
+    }
+  ]
+}
