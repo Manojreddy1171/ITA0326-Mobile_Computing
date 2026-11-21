@@ -2,6 +2,7 @@
    AgriConnect – Universal Mobile Navigation Drawer & Responsive Layout Engine
    Fixes sidebar overlapping, ensures 100% responsive behavior across devices
    ========================================================================== */
+@import url('agri-theme-lang.css');
 
 :root {
     --agri-sidebar-width: 260px;

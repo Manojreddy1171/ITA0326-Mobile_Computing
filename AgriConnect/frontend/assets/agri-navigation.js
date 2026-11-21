@@ -6,6 +6,15 @@
 (function () {
     "use strict";
 
+    // Auto-load Theme & Language Engine if not loaded
+    if (!window.setAgriTheme && !document.getElementById("agriThemeLangScript")) {
+        const s = document.createElement("script");
+        s.id = "agriThemeLangScript";
+        s.src = "assets/agri-theme-lang.js";
+        s.async = true;
+        document.head.appendChild(s);
+    }
+
     function initNavigationDrawer() {
         const sidebar = document.getElementById("sidebar") || document.querySelector(".sidebar");
         if (!sidebar) return;

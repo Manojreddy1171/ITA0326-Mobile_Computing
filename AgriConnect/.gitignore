@@ -20,3 +20,4 @@ Thumbs.db
 .vscode/
 .idea/
 !.env.example
+qa/screenshots/theme_and_lang/

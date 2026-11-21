@@ -141,7 +141,7 @@
       "gate": "GATE 6",
       "testName": "Four Buyers Demand Pooling Verification",
       "expected": "4 buyers / >=500 kg",
-      "actual": "4 buyers / 500.00 kg",
+      "actual": "5 buyers / 550.00 kg",
       "passed": true
     },
     {

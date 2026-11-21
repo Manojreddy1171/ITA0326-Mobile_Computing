@@ -1,0 +1,318 @@
+/* ==========================================================================
+   AgriConnect – Theme (Dark/Light) & Google Translation Styling Engine
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS VARIABLES FOR LIGHT & DARK THEMES
+   -------------------------------------------------------------------------- */
+:root {
+    --agri-body-bg: #F8FAF8;
+    --agri-card-bg: #FFFFFF;
+    --agri-header-bg: #FFFFFF;
+    --agri-sidebar-bg: #FFFFFF;
+    --agri-text-main: #263238;
+    --agri-text-muted: #546E7A;
+    --agri-border: #E0E0E0;
+    --agri-input-bg: #FFFFFF;
+    --agri-card-shadow: 0 4px 16px rgba(46, 125, 50, 0.08);
+    --agri-primary: #2E7D32;
+    --agri-primary-hover: #1B5E20;
+    --agri-secondary: #66BB6A;
+    --agri-accent: #FF9800;
+}
+
+[data-theme="dark"], body.dark-theme {
+    --agri-body-bg: #121614 !important;
+    --agri-card-bg: #1A211D !important;
+    --agri-header-bg: #161D18 !important;
+    --agri-sidebar-bg: #141A16 !important;
+    --agri-text-main: #EDF3EE !important;
+    --agri-text-muted: #9BB0A0 !important;
+    --agri-border: #2C3A2F !important;
+    --agri-input-bg: #222B25 !important;
+    --agri-card-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
+    --agri-primary: #43A047 !important;
+    --agri-primary-hover: #4CAF50 !important;
+    --agri-secondary: #81C784 !important;
+    --white: #1A211D !important;
+    --bg-color: #121614 !important;
+    --text-dark: #EDF3EE !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. DARK MODE OVERRIDES ACROSS ALL SCREENS
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] body {
+    background-color: var(--agri-body-bg) !important;
+    color: var(--agri-text-main) !important;
+}
+
+[data-theme="dark"] .site-header,
+[data-theme="dark"] .navbar,
+[data-theme="dark"] .top-bar,
+[data-theme="dark"] header {
+    background-color: var(--agri-header-bg) !important;
+    border-color: var(--agri-border) !important;
+    color: var(--agri-text-main) !important;
+}
+
+[data-theme="dark"] .sidebar,
+[data-theme="dark"] aside.sidebar,
+[data-theme="dark"] #sidebar {
+    background-color: var(--agri-sidebar-bg) !important;
+    border-color: var(--agri-border) !important;
+    color: var(--agri-text-main) !important;
+}
+
+[data-theme="dark"] .sidebar a,
+[data-theme="dark"] .nav-link,
+[data-theme="dark"] .sidebar-nav a {
+    color: var(--agri-text-muted) !important;
+}
+
+[data-theme="dark"] .sidebar a:hover,
+[data-theme="dark"] .sidebar a.active,
+[data-theme="dark"] .nav-link:hover,
+[data-theme="dark"] .nav-link.active {
+    background-color: rgba(67, 160, 71, 0.15) !important;
+    color: var(--agri-primary) !important;
+}
+
+/* Dark mode cards & containers */
+[data-theme="dark"] .card,
+[data-theme="dark"] .settings-card,
+[data-theme="dark"] .product-card,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .workflow-step,
+[data-theme="dark"] .dashboard-card,
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .negotiation-container,
+[data-theme="dark"] .campaign-card,
+[data-theme="dark"] .crop-card,
+[data-theme="dark"] .panel,
+[data-theme="dark"] .main-content,
+[data-theme="dark"] .table-card {
+    background-color: var(--agri-card-bg) !important;
+    border-color: var(--agri-border) !important;
+    color: var(--agri-text-main) !important;
+    box-shadow: var(--agri-card-shadow) !important;
+}
+
+/* Deep override for hardcoded inline white cards */
+[data-theme="dark"] div[style*="background: white"],
+[data-theme="dark"] div[style*="background: #fff"],
+[data-theme="dark"] div[style*="background-color: white"],
+[data-theme="dark"] div[style*="background-color: #fff"] {
+    background-color: var(--agri-card-bg) !important;
+    color: var(--agri-text-main) !important;
+}
+
+/* Dark mode inputs, selects & form controls */
+[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background-color: var(--agri-input-bg) !important;
+    border-color: var(--agri-border) !important;
+    color: var(--agri-text-main) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: #6C7F70 !important;
+}
+
+/* Dark mode tables */
+[data-theme="dark"] table {
+    border-color: var(--agri-border) !important;
+}
+
+[data-theme="dark"] th {
+    background-color: #1F2822 !important;
+    color: #A3B8A8 !important;
+    border-color: var(--agri-border) !important;
+}
+
+[data-theme="dark"] td {
+    border-color: var(--agri-border) !important;
+    color: var(--agri-text-main) !important;
+}
+
+[data-theme="dark"] tr:hover {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Headings & Text in dark mode */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+    color: #F2F7F3 !important;
+}
+
+[data-theme="dark"] .settings-card-desc,
+[data-theme="dark"] .text-muted,
+[data-theme="dark"] p {
+    color: var(--agri-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   3. SETTINGS PAGE THEME & LANGUAGE CONTROLS
+   -------------------------------------------------------------------------- */
+.settings-theme-options,
+.settings-language-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.theme-option,
+.lang-option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 2px solid var(--agri-border);
+    background-color: var(--agri-card-bg);
+    color: var(--agri-text-main);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.theme-option:hover,
+.lang-option:hover {
+    border-color: var(--agri-primary);
+    transform: translateY(-1px);
+}
+
+.theme-option.selected,
+.lang-option.selected {
+    border-color: var(--agri-primary);
+    background-color: rgba(46, 125, 50, 0.12);
+    color: var(--agri-primary);
+    font-weight: 600;
+}
+
+[data-theme="dark"] .theme-option.selected,
+[data-theme="dark"] .lang-option.selected {
+    background-color: rgba(67, 160, 71, 0.22);
+    color: #81C784;
+}
+
+.theme-check,
+.lang-check {
+    display: none;
+    font-weight: bold;
+    color: var(--agri-primary);
+}
+
+[data-theme="dark"] .theme-check,
+[data-theme="dark"] .lang-check {
+    color: #81C784;
+}
+
+.theme-option.selected .theme-check,
+.lang-option.selected .lang-check {
+    display: inline-block;
+}
+
+/* --------------------------------------------------------------------------
+   4. FLOATING QUICK ACTION BAR (Language + Theme Switcher)
+   -------------------------------------------------------------------------- */
+#agriQuickBar {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    border: 1px solid #D5DDD6;
+    border-radius: 36px;
+    padding: 6px 12px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    transition: all 0.25s ease;
+}
+
+[data-theme="dark"] #agriQuickBar {
+    background: #1A211D;
+    border-color: #2C3A2F;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.5);
+    color: #EDF3EE;
+}
+
+.agri-quick-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.agri-quick-btn:hover {
+    background: rgba(46, 125, 50, 0.1);
+    border-color: rgba(46, 125, 50, 0.25);
+}
+
+[data-theme="dark"] .agri-quick-btn:hover {
+    background: rgba(67, 160, 71, 0.2);
+    border-color: rgba(67, 160, 71, 0.4);
+}
+
+.agri-lang-select {
+    border: 1px solid var(--agri-border);
+    border-radius: 18px;
+    padding: 4px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    background-color: var(--agri-input-bg);
+    color: var(--agri-text-main);
+    cursor: pointer;
+    outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. GOOGLE TRANSLATE SUPPRESSION & CLEANUP
+   -------------------------------------------------------------------------- */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+body {
+    top: 0px !important;
+    position: static !important;
+}
+
+.goog-text-highlight {
+    background: none !important;
+    box-shadow: none !important;
+}
+
+#google_translate_element {
+    display: none !important;
+}
+
+.goog-te-gadget {
+    display: none !important;
+}
